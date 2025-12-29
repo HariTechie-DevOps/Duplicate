@@ -1,32 +1,23 @@
 package com.spark.chat.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.Data;
 
-@Entity
+@Entity 
+@Data 
 @Table(name = "users")
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class User {
-
-    @Id
+    @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    
     private String name;
-    private int age;
+    private Integer age;
     private String gender;
-
-    @Column(unique = true, nullable = false, length = 15)
+    
+    @Column(unique = true) // Ensures Nth user mobile uniqueness
     private String mobile;
-
-    @Column(nullable = false)
+    
     private String password;
-
-    private String token;
-
-    // Added for Forgot Password logic
-    private String otp; 
+    private String token; // For Remember Me functionality
 }
