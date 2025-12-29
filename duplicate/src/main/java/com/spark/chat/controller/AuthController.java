@@ -1,63 +1,47 @@
 package com.spark.chat.controller;
 
-import com.spark.chat.dto.*;      // Change this to match your folder
-import com.spark.chat.service.AuthService; // This is the fix for the error!
+import com.spark.chat.controller.User;
 import com.spark.chat.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "*")
 public class AuthController {
 
-    private final AuthService authService;
-    private final UserRepository repo; // Added this variable
+    @Autowired 
+    private UserRepository userRepository;
 
-    // Updated Constructor to include the repo
-    public AuthController(AuthService authService, UserRepository repo) {
-        this.authService = authService;
-        this.repo = repo;
-    }
-
-   // --- STEP 1: CREATE ACCOUNT ---
-    // This is called by your signup.html page
     @PostMapping("/signup")
-    public SignupResponse signup(@RequestBody SignupRequest req) {
-        return authService.registerUser(req); 
+    public ResponseEntity<?> signup(@RequestBody User user) {
+        // Step 1: Check if mobile already exists for any user
+        if(userRepository.findByMobile(user.getMobile()).isPresent()) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Mobile number already registered");
+        }
+        // Step 2: Store data and generate unique session token
+        user.setToken(UUID.randomUUID().toString());
+        return ResponseEntity.ok(userRepository.save(user));
     }
 
-    // --- STEP 2: LOGIN TO ACCOUNT ---
-    // This is called by your signin.html page
     @PostMapping("/signin")
-    public SignupResponse signin(@RequestBody SigninRequest req) {
-        return authService.authenticate(req);
+    public ResponseEntity<?> signin(@RequestBody Map<String, String> loginData) {
+        // Step 1: Fetch and validate user from DB
+        return userRepository.findByMobileAndPassword(loginData.get("mobile"), loginData.get("password"))
+                .map(user -> ResponseEntity.ok(user)) // Returns whole user object + token
+                .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
-    @PostMapping("/forgot-password/send-otp")
-    public Map<String, Object> sendOtp(@RequestBody Map<String, String> body) {
-        boolean success = authService.generateOtp(body.get("mobile"));
-        return Map.of("success", success, "message", success ? "OTP Sent" : "Mobile not found");
-    }
-
-    @PostMapping("/forgot-password/verify-otp")
-    public Map<String, Object> verify(@RequestBody Map<String, String> body) {
-        boolean success = authService.verifyOtp(body.get("mobile"), body.get("otp"));
-        return Map.of("success", success, "message", success ? "Verified" : "Invalid OTP");
-    }
-
-    @PostMapping("/forgot-password/update")
-    public Map<String, Object> update(@RequestBody ForgotPasswordRequest req) {
-        authService.updatePassword(req.mobile, req.newPassword);
-        return Map.of("success", true);
-    }
-
-    // This method was causing the error because 'repo' was missing
-    @GetMapping("/user/profile")
-    public SignupResponse getProfile(@RequestParam String token) {
-        return repo.findAll().stream()
-            .filter(u -> token.equals(u.getToken()))
-            .findFirst()
-            .map(u -> new SignupResponse(true, null, "Found", u.getToken(), u.getName(), u.getAge(), u.getGender()))
-            .orElseThrow(() -> new RuntimeException("Invalid Token"));
+    @PostMapping("/password/reset")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> data) {
+        // Step 1: Identify current user by mobile
+        return userRepository.findByMobile(data.get("mobile")).map(user -> {
+            user.setPassword(data.get("password"));
+            userRepository.save(user);
+            return ResponseEntity.ok("Password Updated");
+        }).orElse(ResponseEntity.notFound().build());
     }
 }
