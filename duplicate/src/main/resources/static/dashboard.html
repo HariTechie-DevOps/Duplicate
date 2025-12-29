@@ -1,35 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Dashboard</title>
+    <meta charset="UTF-8">
+    <title>Send OTP</title>
     <style>
-        body { font-family: Arial, sans-serif; display: flex; justify-content: center; margin-top: 50px; background: #f5f5f5; }
-        .card { background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); text-align: center; width: 300px; }
-        button { background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 20px; }
+        body { font-family: Arial; background: #f4f7f6; display: flex; justify-content: center; padding: 50px; }
+        .card { width: 350px; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #333; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; background: #007bff; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #0056b3; }
+        .error { color: red; font-size: 12px; display: none; margin-bottom: 10px; }
+        #otpSection { margin-top: 20px; border-top: 1px solid #eee; padding-top: 15px; }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h2>Welcome!</h2>
-        <p id="userGreeting">Loading...</p>
-        <button onclick="logout()">Logout</button>
+
+<div class="card">
+    <h2>Identify Account</h2>
+    
+    <label>Mobile Number</label>
+    <input id="mobile" placeholder="Enter Mobile Number">
+    <div class="error" id="mobileError">User not found</div>
+    
+    <button id="sendBtn" onclick="sendOtp()">Send OTP</button>
+
+    <div id="otpSection" style="display:none">
+        <label>Verification Code</label>
+        <input id="otpInput" placeholder="Enter 4-digit OTP (1234)">
+        <button onclick="verify()">Verify & Proceed</button>
     </div>
+</div>
 
-    <script>
-        // Real-world security: If no token exists, kick them back to login
-        const token = localStorage.getItem("token");
-        const name = localStorage.getItem("userName");
 
-        if (!token) {
-            window.location.href = "signin.html";
+
+<script>
+const API_BASE = "http://localhost:8080";
+
+/**
+ * Sends OTP via Spring Boot Backend
+ */
+function sendOtp() {
+    const mobileVal = document.getElementById('mobile').value;
+    
+    if(!mobileVal || mobileVal.length < 10) {
+        alert("Please enter a valid mobile number");
+        return;
+    }
+
+    // Real-world logic: Call backend to trigger SMS service (like Twilio)
+    fetch(`${API_BASE}/api/password/send-otp`, {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ mobile: mobileVal })
+    })
+    .then(response => {
+        if(response.ok) {
+            // 1. Store mobile in sessionStorage to identify the user on the NEXT page
+            sessionStorage.setItem('resetMobile', mobileVal);
+            
+            // 2. Show the OTP input section
+            document.getElementById('otpSection').style.display = 'block';
+            
+            // 3. Disable the send button or change text to "Resend"
+            document.getElementById('sendBtn').innerText = "Resend OTP";
+            
+            alert("OTP has been sent to your mobile.");
         } else {
-            document.getElementById("userGreeting").innerText = "Hello, " + name + "!";
+            document.getElementById('mobileError').style.display = 'block';
         }
+    })
+    .catch(err => console.error("Error sending OTP:", err));
+}
 
-        function logout() {
-            localStorage.clear(); // Wipe the token
-            window.location.href = "signin.html";
-        }
-    </script>
+/**
+ * Verifies the OTP entered by the user
+ */
+function verify() {
+    const enteredOtp = document.getElementById('otpInput').value;
+
+    // Real-world logic: In a production app, you would fetch `${API_BASE}/api/verify-otp`
+    // For now, we use your specified implementation of hardcoded "1234"
+    if(enteredOtp === "1234") {
+        window.location.href = "resetpassword.html";
+    } else {
+        alert("Invalid OTP. Please try again.");
+    }
+}
+</script>
+
 </body>
 </html>
