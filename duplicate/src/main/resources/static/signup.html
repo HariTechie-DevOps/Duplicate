@@ -3,130 +3,251 @@
 <head>
 <meta charset="UTF-8">
 <title>Sign Up</title>
+
 <style>
-    /* Integrated clean styling */
-    body { font-family: Arial; display: flex; justify-content: center; background: #f0f2f5; padding-top: 50px; }
-    .container { width: 360px; background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-    h2 { text-align: center; color: #333; margin-bottom: 20px; }
-    label { display: block; margin-top: 12px; font-weight: 600; color: #555; }
-    input, select { width: 100%; padding: 10px; margin-top: 6px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-    .input-group { display: flex; }
-    #code { width: 35%; margin-right: 6px; }
-    button { width: 100%; padding: 12px; margin-top: 20px; background: #1877f2; color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
-    button:hover { background: #166fe5; }
-    .error { color: red; font-size: 11px; display: none; margin-top: 4px; }
-    .signin { text-align: center; margin-top: 15px; font-size: 14px; }
-    .signin a { color: #1877f2; font-weight: 600; text-decoration: none; }
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+.container {
+  width: 360px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.input-group {
+  display: flex;
+}
+
+select, input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+select {
+  width: 35%;
+  margin-right: 6px;
+}
+
+input.invalid, select.invalid {
+  border-color: red;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+
+.actions {
+  margin-top: 20px;
+  text-align: center;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+.signin {
+  margin-top: 12px;
+  font-size: 14px;
+}
+
+.signin a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.signin a:hover {
+  text-decoration: underline;
+}
 </style>
 </head>
+
 <body>
 
 <div class="container">
-    <h2>Register</h2>
+  <h2>Sign Up</h2>
 
-    <label>Full Name</label>
-    <input id="name" placeholder="Enter name">
-    <div id="nameErr" class="error">Enter at least 3 characters</div>
+  <label>Name</label>
+  <input id="name">
+  <div class="error" id="nameError"></div>
 
-    <label>Age</label>
-    <input id="age" type="number" placeholder="Enter age">
-    <div id="ageErr" class="error">Age must be 18-100</div>
+  <label>Age</label>
+  <input id="age" type="number">
+  <div class="error" id="ageError"></div>
 
-    <label>Gender</label>
-    <select id="gender">
-        <option value="">Select Gender</option>
-        <option>Male</option>
-        <option>Female</option>
+  <label>Gender</label>
+  <select id="gender">
+    <option value="">Select</option>
+    <option>Male</option>
+    <option>Female</option>
+  </select>
+  <div class="error" id="genderError"></div>
+
+  <label>Mobile</label>
+  <div class="input-group">
+    <select id="code">
+      <option value="+91">+91</option>
+      <option value="+1">+1</option>
+      <option value="+44">+44</option>
     </select>
-    <div id="genderErr" class="error">Please select gender</div>
+    <input id="mobile" maxlength="15">
+  </div>
+  <div class="error" id="mobileError"></div>
 
-    <label>Mobile Number</label>
-    <div class="input-group">
-        <select id="code"><option value="+91">+91</option></select>
-        <input id="mobile" placeholder="10 digits">
-    </div>
-    <div id="mobileErr" class="error">Invalid mobile number</div>
+  <label>Password</label>
+  <input id="password" type="password">
+  <div class="error" id="passwordError"></div>
 
-    <label>Password</label>
-    <input id="pass" type="password" placeholder="Minimum 6 characters">
-    <div id="passErr" class="error">Minimum 6 characters required</div>
-
-    <button onclick="handleSignup()">Sign Up</button>
+  <div class="actions">
+    <button id="signupBtn" onclick="signup()">Sign Up</button>
 
     <div class="signin">
-        Already have an account?
-        <a href="signin.html">Sign In</a>
+      Already have an account?
+      <a href="#" onclick="openSignin()">Sign In</a>
     </div>
+  </div>
 </div>
 
-
-
 <script>
-    const API_BASE = "http://localhost:8080/api";
+const API_BASE = "http://localhost:8080";
 
-    // This prevents letters in the mobile field
-    document.getElementById('mobile').oninput = e => e.target.value = e.target.value.replace(/\D/g, "");
+function clearErrors() {
+  document.querySelectorAll(".error").forEach(e => {
+    e.style.display = "none";
+    e.innerText = "";
+  });
+  document.querySelectorAll("input, select").forEach(e => {
+    e.classList.remove("invalid");
+  });
+}
 
-    function handleSignup() {
-        // Reset error messages
-        document.querySelectorAll('.error').forEach(e => e.style.display = 'none');
-        
-        // Collect data into an object matching your Spring Boot User Entity
-        const user = {
-            name: document.getElementById('name').value.trim(),
-            age: document.getElementById('age').value,
-            gender: document.getElementById('gender').value,
-            mobile: document.getElementById('code').value + document.getElementById('mobile').value,
-            password: document.getElementById('pass').value
-        };
+function showError(field, message) {
+  const input = document.getElementById(field);
+  const error = document.getElementById(field + "Error");
 
-        let isValid = true;
+  if (input) input.classList.add("invalid");
+  if (error) {
+    error.innerText = message;
+    error.style.display = "block";
+  }
+}
 
-        // Validation Logic (Real-world example: same as creating a Gmail or bank account)
-        if (user.name.length < 3) { 
-            document.getElementById('nameErr').style.display = 'block'; 
-            isValid = false; 
-        }
-        if (user.age < 18 || user.age > 100) { 
-            document.getElementById('ageErr').style.display = 'block'; 
-            isValid = false; 
-        }
-        if (!user.gender) { 
-            document.getElementById('genderErr').style.display = 'block'; 
-            isValid = false; 
-        }
-        // Validates 10 digit mobile (after prefix)
-        if (!/^\+91\d{10}$/.test(user.mobile)) { 
-            document.getElementById('mobileErr').style.display = 'block'; 
-            isValid = false; 
-        }
-        if (user.password.length < 6) { 
-            document.getElementById('passErr').style.display = 'block'; 
-            isValid = false; 
-        }
+document.getElementById("mobile").addEventListener("input", e => {
+  e.target.value = e.target.value.replace(/\D/g, "");
+});
 
-        if (!isValid) return;
+function signup() {
+  clearErrors();
 
-        // API call to Spring Boot
-        fetch(`${API_BASE}/signup`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(user)
-        })
-        .then(res => {
-            if (res.ok) {
-                alert("Registration Successful!");
-                window.location.href = 'signin.html';
-            } else {
-                // If Nth user tries to use an existing mobile number, DB returns 400/409
-                alert("This mobile number is already registered!");
-            }
-        })
-        .catch(err => {
-            console.error("Connection Error:", err);
-            alert("Could not connect to the server.");
-        });
+  const name = document.getElementById("name").value.trim();
+  const age = document.getElementById("age").value;
+  const gender = document.getElementById("gender").value;
+  const mobileOnly = document.getElementById("mobile").value.trim();
+  const mobile = document.getElementById("code").value + mobileOnly;
+  const password = document.getElementById("password").value;
+
+  let invalid = false;
+
+  if (!/^[A-Za-z ]{3,}$/.test(name)) {
+    showError("name", "Enter valid name (min 3 letters)");
+    invalid = true;
+  }
+
+  if (!age || age < 18 || age > 100) {
+    showError("age", "Age must be between 18 and 100");
+    invalid = true;
+  }
+
+  if (!gender) {
+    showError("gender", "Select gender");
+    invalid = true;
+  }
+
+  if (!/^[0-9]{7,15}$/.test(mobileOnly)) {
+    document.getElementById("mobile").classList.add("invalid");
+    document.getElementById("code").classList.add("invalid");
+    document.getElementById("mobileError").innerText = "Enter valid mobile number";
+    document.getElementById("mobileError").style.display = "block";
+    invalid = true;
+  }
+
+  if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
+    showError("password", "Password must be strong");
+    invalid = true;
+  }
+
+  if (invalid) return;
+
+  const btn = document.getElementById("signupBtn");
+  btn.disabled = true;
+  btn.innerText = "Signing up...";
+
+  fetch(`${API_BASE}/api/signup`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, age, gender, mobile, password })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (!data.success) {
+      showError(data.field, data.message);
+      btn.disabled = false;
+      btn.innerText = "Sign Up";
+      return;
     }
+    alert("Signup successful");
+    window.location.href = "signin.html";
+  })
+  .catch(() => {
+    alert("Backend not reachable");
+    btn.disabled = false;
+    btn.innerText = "Sign Up";
+  });
+}
+
+function openSignin() {
+  fetch(`${API_BASE}/api/signin/init`, {
+    method: "GET"
+  })
+  .finally(() => {
+    window.location.href = "signin.html";
+  });
+}
 </script>
+
 </body>
 </html>
