@@ -4,7 +4,7 @@ class signupservies {
 
   public signuprepository repo;
 
-  public signuprepository(signuprepository repo){
+  public signupservies(signuprepository repo){
     this.repo = repo;
   }
   
