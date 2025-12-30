@@ -248,16 +248,12 @@ function signup() {
 }
 
 function openSignin() {
-  fetch(`${API_BASE}/api/signin/init`, {
-    method: "GET"
-  })
-  .finally(() => {
     window.location.href = "signin.html";
-  });
 }
 </script>
 
 </body>
 </html>
+
 
 
