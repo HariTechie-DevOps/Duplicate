@@ -224,11 +224,19 @@ function signup() {
   .then(res => res.json())
   .then(data => {
     if (!data.success) {
-      showError(data.field, data.message);
-      btn.disabled = false;
-      btn.innerText = "Sign Up";
-      return;
+        if (data.field) {
+            showError(data.field, data.message);
+        } else {
+            alert("Error: " + data.message);
+        }
+        
+        btn.disabled = false;
+        btn.innerText = "Sign Up";
+        return;
     }
+    alert("Signup successful!");
+    window.location.href = "signin.html";
+})
     alert("Signup successful");
     window.location.href = "signin.html";
   })
@@ -251,3 +259,4 @@ function openSignin() {
 
 </body>
 </html>
+
