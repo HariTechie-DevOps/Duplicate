@@ -1,4 +1,5 @@
 package com.spark.chat.servies;
+import com.spark.chat.repository;
   
 class signupservies {
 
