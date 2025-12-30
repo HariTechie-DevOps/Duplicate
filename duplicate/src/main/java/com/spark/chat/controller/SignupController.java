@@ -6,7 +6,7 @@ import com.spark.chat.services.SignupService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SignupController {
 
     private final SignupService service;
@@ -20,3 +20,4 @@ public class SignupController {
         return service.handlesignup(request);
     }
 }
+
