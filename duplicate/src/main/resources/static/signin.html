@@ -183,15 +183,10 @@ function forgotPassword() {
 }
 
 function openSignup() {
-  // Call API before redirecting to signup page
-  fetch(`${API_BASE}/api/signup/init`, {
-    method: "GET"
-  })
-  .finally(() => {
     window.location.href = "signup.html";
-  });
 }
 </script>
 
 </body>
 </html>
+
