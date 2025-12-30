@@ -1,6 +1,7 @@
 package com.spark.chat.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity 
 @Data 
@@ -19,4 +20,5 @@ public class user {
     private String password;
     private String token; 
 }
+
 
