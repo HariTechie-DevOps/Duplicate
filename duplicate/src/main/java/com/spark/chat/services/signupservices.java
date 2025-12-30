@@ -2,21 +2,29 @@ package com.spark.chat.servies;
   
 class signupservies {
 
+  public signuprepository repo;
+
+  public signuprepository(signuprepository repo){
+    this.repo = repo;
+  }
+  
   public signuprequest handlesignup(@RequestBody signuprequest request){
     
-    if(!request.name.equals("/^[A-Za-z ]{3,}$/")){
-      return new signupresponse(false,"invalid name");
+    user users = repo.findByName(request.name);
+    
+    if(users == null){
+      return new signupresponse(false,"user not found");
     }
-    if(request.age < 18 || request.age > 100 ){
+    if(!users.age.equals(request.age)){
       return new signupresponse(false,"invalid age");
     }
-    if(!request.gender.equals("")){
+    if(!users.gender.equals(request.gender)){
        return new signupresponse(false,"invalid gender");
     }
-    if(!request.mobile.equals("/^[0-9]{7,15}$/")){
+    if(!users.mobile.equals(request.mobile)){
       return new signupresponse(false,"invalid mobile number");
     }
-    if(!request.password.equals("/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/")){
+    if(!users.password.equals(request.password)){
       return new signupresponse(false,"invalid password");
     }
     return new signupresponse(true,"signup successfully");
