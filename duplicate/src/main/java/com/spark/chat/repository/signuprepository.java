@@ -5,7 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface signuprepository extends JpaRepository<User, Long> {
-   
+   List<user> findByName(String name);
 }
+
 
 
