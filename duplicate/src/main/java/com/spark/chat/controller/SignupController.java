@@ -19,5 +19,12 @@ public class SignupController {
     public SignupResponse signup(@RequestBody SignupRequest request) {
         return service.handlesignup(request);
     }
+
+    @PostMapping("/api/signin")
+    public SignupResponse signin(@RequestBody SignupRequest request) {
+        return new SignupResponse(true, null, "Login successful");
+    }
+    
 }
+
 
