@@ -137,20 +137,24 @@ document.getElementById("otp").addEventListener("input", e => {
 function sendOtp() {
     const mobile = document.getElementById('mobileNumber').value;
     
-    // We add ?mobile= at the end of the URL
-    fetch(`${API_BASE}/api/password/forgot?mobile=${mobile}`, {
-        method: "POST" 
+    fetch(`${API_BASE}/api/password/forgot`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json" // Real-world requirement for JSON
+        },
+        body: JSON.stringify({ "mobile": mobile }) // Sending as JSON object
     })
     .then(res => res.json())
     .then(data => {
+        // If 'data' exists, 'success' won't be undefined
         if (data.success) {
-            alert(data.message); // Should say "OTP printed to server terminal!"
+            alert(data.message); 
             document.getElementById('otpSection').style.display = 'block';
         } else {
-            alert("Error: " + data.message);
+            alert("Error: " + (data.message || "Unknown error"));
         }
     })
-    .catch(err => alert("Connection Error: " + err));
+    .catch(err => alert("Server is down or IP is wrong: " + err));
 }
 function verifyOtp() {
     const mobile = document.getElementById('mobileNumber').value;
