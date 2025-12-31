@@ -19,12 +19,15 @@ public class SignupController {
     public SignupResponse signup(@RequestBody SignupRequest request) {
         return service.handlesignup(request);
     }
-
+    
+    // UPDATED CODE (Real/Connected)
     @PostMapping("/api/signin")
     public SignupResponse signin(@RequestBody SignupRequest request) {
-        return new SignupResponse(true, null, "Login successful");
+        // This now tells the Service to check the database
+        return service.handleSignin(request); 
     }
     
 }
+
 
 
