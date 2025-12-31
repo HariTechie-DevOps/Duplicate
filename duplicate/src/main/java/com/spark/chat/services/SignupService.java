@@ -79,4 +79,15 @@ public class SignupService {
         }
         return new SignupResponse(false, "otp", "Invalid OTP entered.");
     }
+
+    // Add this method inside your SignupService class
+    public SignupResponse updatePassword(String mobile, String newPassword) {
+        return repo.findByMobile(mobile)
+            .map(user -> {
+                user.setPassword(newPassword); // Set the new password
+                repo.save(user); // Save to MySQL
+                return new SignupResponse(true, null, "Password updated successfully!");
+            })
+            .orElse(new SignupResponse(false, "mobile", "User not found"));
+    }
 }
