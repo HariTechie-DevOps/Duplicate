@@ -171,7 +171,24 @@ function sendOtp() {
 });
   
 }
+function verifyOtp() {
+    const mobile = document.getElementById('mobileNumber').value;
+    const otp = document.getElementById('otpInput').value;
 
+    fetch(`${API_BASE}/api/password/verify-otp?mobile=${mobile}&otp=${otp}`, {
+        method: "POST"
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Verified! Redirecting to reset password...");
+            // This is the next page we need to create
+            window.location.href = "reset.html?mobile=" + mobile; 
+        } else {
+            alert("Invalid OTP. Check the terminal again!");
+        }
+    });
+}
 function proceed() {
     const otpInput = document.getElementById("otp");
     const mobile = document.getElementById("code").value + document.getElementById("mobile").value;
