@@ -26,8 +26,19 @@ public class SignupController {
         // This now tells the Service to check the database
         return service.handleSignin(request); 
     }
-    
+
+    @PostMapping("/api/password/send-otp")
+    public SignupResponse sendOtp(@RequestBody Map<String, String> payload) {
+        return service.sendOtp(payload.get("mobile"));
+    }
+
+    @PostMapping("/api/password/verify-otp")
+    public SignupResponse verifyOtp(@RequestBody Map<String, String> payload) {
+        // We need the mobile number to know which OTP to check
+        return service.verifyOtp(payload.get("mobile"), payload.get("otp"));
+    }
 }
+
 
 
 
