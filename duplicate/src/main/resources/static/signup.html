@@ -143,7 +143,7 @@ button:disabled {
 </div>
 
 <script>
-const API_BASE = "http://3.123.45.67:8080";
+const API_BASE = "http://localhost:8080";;
 
 function clearErrors() {
   document.querySelectorAll(".error").forEach(e => {
@@ -236,9 +236,6 @@ function signup() {
     }
     alert("Signup successful!");
     window.location.href = "signin.html";
-})
-    alert("Signup successful");
-    window.location.href = "signin.html";
   })
   .catch(() => {
     alert("Backend not reachable");
@@ -254,6 +251,7 @@ function openSignin() {
 
 </body>
 </html>
+
 
 
 
