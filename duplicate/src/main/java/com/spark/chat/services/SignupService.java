@@ -57,41 +57,18 @@ public class SignupService {
     }
 
     public SignupResponse sendOtp(String mobile) {
-    // 1. Generate 6 digit OTP
+    // 1. Generate the 6-digit code
     String otp = String.format("%06d", new Random().nextInt(999999));
-    otpStorage.put(mobile, otp);
+    
+    // 2. CRITICAL: You must save it in otpStorage so verifyOtp works!
+    otpStorage.put(mobile, otp); 
 
-    try {
-        // 2. Prepare the Message Text
-        String message = "Your Spark Chat verification code is: " + otp;
-        
-        // 3. Use Route 'q' (Quick) instead of 'otp'
-        // We must URL-encode the message because it contains spaces
-        String urlString = "https://www.fast2sms.com/dev/bulkV2?authorization=" + FAST2SMS_KEY +
-                "&route=q&message=" + java.net.URLEncoder.encode(message, "UTF-8") + 
-                "&language=english&flash=0&numbers=" + mobile;
-        
-        System.out.println("DEBUG: Attempting Quick SMS to: " + mobile);
-        
-        URL url = new URL(urlString);
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("GET");
+    // 3. Print to terminal for you to see
+    System.out.println("******************************************");
+    System.out.println("DEVELOPER ALERT: OTP for " + mobile + " is [" + otp + "]");
+    System.out.println("******************************************");
 
-        int responseCode = conn.getResponseCode();
-        if (responseCode == 200) {
-            System.out.println("SUCCESS: OTP sent via Quick Route.");
-            return new SignupResponse(true, null, "OTP sent successfully!");
-        } else {
-            // Read the specific error from Fast2SMS
-            java.util.Scanner s = new java.util.Scanner(conn.getErrorStream()).useDelimiter("\\A");
-            String errorMsg = s.hasNext() ? s.next() : "";
-            System.err.println("Fast2SMS API Error: " + errorMsg);
-            return new SignupResponse(false, "error", "Provider Error: " + responseCode);
-        }
-    } catch (Exception e) {
-        System.err.println("System Crash: " + e.getMessage());
-        return new SignupResponse(false, "error", "Failed: " + e.getMessage());
-    }
+    return new SignupResponse(true, null, "OTP printed to server terminal!");
 }
     
     public SignupResponse verifyOtp(String mobile, String userOtp) {
