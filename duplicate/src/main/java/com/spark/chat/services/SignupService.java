@@ -13,12 +13,12 @@ import java.io.InputStreamReader;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-// Inside SignupService class:
-private final String FAST2SMS_KEY = "273o16HgyGabwheWFQT4JtkRplVdLiIXB5j0YPxAmMON8zvUrSNZG2BSCTRU9uj0npIb4dy8Mq3Ycz5h"; // Replace with your real key
-private final ConcurrentHashMap<String, String> otpStorage = new ConcurrentHashMap<>();
 
 @Service
 public class SignupService {
+
+    private final String FAST2SMS_KEY = "273o16HgyGabwheWFQT4JtkRplVdLiIXB5j0YPxAmMON8zvUrSNZG2BSCTRU9uj0npIb4dy8Mq3Ycz5h"; 
+    private final ConcurrentHashMap<String, String> otpStorage = new ConcurrentHashMap<>();
 
     private final SignupRepository repo;
 
