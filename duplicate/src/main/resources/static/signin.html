@@ -202,13 +202,7 @@ function login() {
 }
 
 function forgotPassword() {
-  // Placeholder API call
-  fetch(`${API_BASE}/api/password/forgot`, {
-    method: "GET"
-  })
-  .then(() => {
-    // Redirect or modal later
-  });
+  window.location.href = "sendotp.html";
 }
 
 function openSignup() {
@@ -218,6 +212,7 @@ function openSignup() {
 
 </body>
 </html>
+
 
 
 
