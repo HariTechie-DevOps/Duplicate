@@ -160,13 +160,16 @@ function sendOtp() {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ mobile })
   })
-  .then(res => {
-    if (!res.ok) throw new Error("OTP API failed");
-    console.log("OTP sent");
-  })
-  .catch(err => {
-    console.warn("OTP API issue (UI still works):", err.message);
-  });
+  .then(data => {
+    if (data.success) {
+        // Updated message for Developer Mode
+        alert("Developer Mode: Check your AWS Terminal for the OTP!"); 
+        document.getElementById('otpSection').style.display = 'block';
+    } else {
+        alert("Error: " + data.message);
+    }
+});
+  
 }
 
 function proceed() {
