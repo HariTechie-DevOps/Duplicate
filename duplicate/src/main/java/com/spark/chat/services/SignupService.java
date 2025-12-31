@@ -32,4 +32,16 @@ public class SignupService {
         
         return new SignupResponse(true, null, "Signup successful");
     }
+
+    public SignupResponse handleSignin(SignupRequest request) {
+        return repo.findByMobile(request.getMobile())
+            .map(user -> {
+                if (user.getPassword().equals(request.getPassword())) {
+                    return new SignupResponse(true, null, "Login Successful!");
+                } else {
+                    return new SignupResponse(false, "password", "Incorrect password");
+                }
+            })
+            .orElse(new SignupResponse(false, "mobile", "User not found"));
+    }
 }
