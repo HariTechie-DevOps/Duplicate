@@ -1,9 +1,12 @@
 package com.spark.chat.controller;
 
+import org.springframework.http.ResponseEntity;
+
 import java.util.Map;
 import com.spark.chat.dto.SignupRequest;
 import com.spark.chat.dto.SignupResponse;
 import com.spark.chat.services.SignupService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -44,6 +47,7 @@ public class SignupController {
         return ResponseEntity.ok(service.sendOtp(mobile));
     }
 }
+
 
 
 
