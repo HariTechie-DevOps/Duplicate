@@ -121,73 +121,68 @@ button:disabled {
 </div>
 
 <script>
-  
-const API_BASE = "http://3.110.162.47:8080";
+const API_BASE = "http://3.110.85.123:8080"; // Ensure this is your current AWS IP
 
-/* Numbers only */
-document.getElementById("mobile").addEventListener("input", e => {
-  e.target.value = e.target.value.replace(/\D/g, "");
-});
+/* 1. Send OTP Function */
+function sendOtp() {
+    const mobileInput = document.getElementById("mobile").value;
+    const countryCode = document.getElementById("code").value;
+    const fullMobile = countryCode + mobileInput;
 
-document.getElementById("otp").addEventListener("input", e => {
-  e.target.value = e.target.value.replace(/\D/g, "");
-});
+    if (mobileInput.length < 10) {
+        alert("Please enter a valid 10-digit mobile number");
+        return;
+    }
 
-/* SEND OTP */
-public SignupResponse sendOtp(String mobile) {
-    // 1. Generate a random 6-digit code
-    String otp = String.format("%06d", new Random().nextInt(999999));
-    
-    // 2. Save it in memory so the verifyOtp method can find it later
-    otpStorage.put(mobile, otp); 
-
-    // 3. Print a clear, visible box in your Ubuntu Terminal
-    System.out.println("\n==========================================");
-    System.out.println("          NEW OTP GENERATED               ");
-    System.out.println("   Mobile: " + mobile);
-    System.out.println("   Code  : [" + otp + "]");
-    System.out.println("==========================================\n");
-
-    // 4. Return success to the browser
-    return new SignupResponse(true, null, "OTP generated! Check your AWS Terminal.");
-}
-function verifyOtp() {
-    const mobile = document.getElementById('mobileNumber').value;
-    const otp = document.getElementById('otpInput').value;
-
-    fetch(`${API_BASE}/api/password/verify-otp?mobile=${mobile}&otp=${otp}`, {
-        method: "POST"
+    // This calls your Java Backend @PostMapping("/api/password/forgot")
+    fetch(`${API_BASE}/api/password/forgot`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile: fullMobile })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            alert("Verified! Redirecting to reset password...");
-            // This is the next page we need to create
-            window.location.href = "reset.html?mobile=" + mobile; 
+            alert("SUCCESS: Check your AWS Ubuntu Terminal for the code!");
+            document.getElementById('otpSection').style.display = 'block';
         } else {
-            alert("Invalid OTP. Check the terminal again!");
+            alert("Error: " + (data.message || "Mobile number not found"));
         }
-    });
+    })
+    .catch(err => alert("Connection Failed: Is the Java server running?"));
 }
+
+/* 2. Proceed (Verify OTP) Function */
 function proceed() {
-    const otpInput = document.getElementById("otp");
-    const mobile = document.getElementById("code").value + document.getElementById("mobile").value;
+    const otpValue = document.getElementById("otp").value;
+    const mobileInput = document.getElementById("mobile").value;
+    const countryCode = document.getElementById("code").value;
+    const fullMobile = countryCode + mobileInput;
 
     fetch(`${API_BASE}/api/password/verify-otp`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mobile: mobile, otp: otpInput.value }) // Send BOTH mobile and otp
+        body: JSON.stringify({ mobile: fullMobile, otp: otpValue })
     })
     .then(res => res.json())
     .then(data => {
         if (data.success) {
             alert("Verified! Going to reset page.");
-            window.location.href = "reset.html?mobile=" + mobile; // Pass mobile to next page
+            window.location.href = "reset.html?mobile=" + fullMobile;
         } else {
-            alert(data.message);
+            alert(data.message || "Invalid OTP. Check terminal again.");
         }
-    });
+    })
+    .catch(err => alert("Error connecting to server."));
 }
+
+/* Number only formatting */
+document.getElementById("mobile").addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g, "");
+});
+document.getElementById("otp").addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g, "");
+});
 </script>
 
 </body>
