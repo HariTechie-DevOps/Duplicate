@@ -146,14 +146,14 @@ function sendOtp() {
     })
     .then(res => res.json())
     .then(data => {
-        // If 'data' exists, 'success' won't be undefined
-        if (data.success) {
-            alert(data.message); 
-            document.getElementById('otpSection').style.display = 'block';
-        } else {
-            alert("Error: " + (data.message || "Unknown error"));
-        }
-    })
+    if (data.success) {
+        // Updated message for Developer Mode
+        alert("Developer Mode: Check your AWS Terminal for the OTP!"); 
+        document.getElementById('otpSection').style.display = 'block';
+    } else {
+      alert("Error: " + data.message);
+    }
+  });
     .catch(err => alert("Server is down or IP is wrong: " + err));
 }
 function verifyOtp() {
