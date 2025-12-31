@@ -134,27 +134,22 @@ document.getElementById("otp").addEventListener("input", e => {
 });
 
 /* SEND OTP */
-function sendOtp() {
-    const mobile = document.getElementById('mobileNumber').value;
+public SignupResponse sendOtp(String mobile) {
+    // 1. Generate a random 6-digit code
+    String otp = String.format("%06d", new Random().nextInt(999999));
     
-    fetch(`${API_BASE}/api/password/forgot`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json" // Real-world requirement for JSON
-        },
-        body: JSON.stringify({ "mobile": mobile }) // Sending as JSON object
-    })
-    .then(res => res.json())
-    .then(data => {
-        // If 'data' exists, 'success' won't be undefined
-        if (data.success) {
-            alert(data.message); 
-            document.getElementById('otpSection').style.display = 'block';
-        } else {
-            alert("Error: " + (data.message || "Unknown error"));
-        }
-    })
-    .catch(err => alert("Server is down or IP is wrong: " + err));
+    // 2. Save it in memory so the verifyOtp method can find it later
+    otpStorage.put(mobile, otp); 
+
+    // 3. Print a clear, visible box in your Ubuntu Terminal
+    System.out.println("\n==========================================");
+    System.out.println("          NEW OTP GENERATED               ");
+    System.out.println("   Mobile: " + mobile);
+    System.out.println("   Code  : [" + otp + "]");
+    System.out.println("==========================================\n");
+
+    // 4. Return success to the browser
+    return new SignupResponse(true, null, "OTP generated! Check your AWS Terminal.");
 }
 function verifyOtp() {
     const mobile = document.getElementById('mobileNumber').value;
