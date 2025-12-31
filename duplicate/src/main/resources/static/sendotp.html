@@ -144,20 +144,19 @@ function sendOtp() {
     })
     .then(res => res.json())
     .then(data => {
-        console.log("Server Response:", data); // Check this in F12 Console
-        
-        if (data.success) {
-            // FIX: Ensure this matches the variable name in your SignupResponse.java
-            // If your DTO uses 'message', use data.message. If it uses 'msg', use data.msg.
-            alert("SUCCESS: Check your AWS Ubuntu Terminal for the code!"); 
+        // Log the actual data to the browser console (F12) to see the structure
+        console.log("Response from AWS:", data);
+
+        if (data.success === true) {
+            // Hardcoded message to avoid 'undefined'
+            alert("OTP generated! Please check your AWS Ubuntu Terminal.");
             document.getElementById('otpSection').style.display = 'block';
         } else {
-            alert("Error: " + (data.message || "User not found"));
+            // Fallback for error message
+            alert("Error: " + (data.message || "Mobile number not found in database"));
         }
     })
-    .catch(err => {
-        alert("Connection Failed. Is the server running?");
-    });
+    .catch(err => alert("Connection error: " + err));
 }
 function verifyOtp() {
     const mobile = document.getElementById('mobileNumber').value;
