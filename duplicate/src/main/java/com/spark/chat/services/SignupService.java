@@ -57,19 +57,19 @@ public class SignupService {
     }
 
     public SignupResponse sendOtp(String mobile) {
-    // 1. Generate the 6-digit code
-    String otp = String.format("%06d", new Random().nextInt(999999));
+        // 1. Generate the 6-digit code
+        String otp = String.format("%06d", new Random().nextInt(999999));
     
-    // 2. CRITICAL: You must save it in otpStorage so verifyOtp works!
-    otpStorage.put(mobile, otp); 
+        // 2. CRITICAL: You must save it in otpStorage so verifyOtp works!
+        otpStorage.put(mobile, otp); 
 
-    // 3. Print to terminal for you to see
-    System.out.println("******************************************");
-    System.out.println("DEVELOPER ALERT: OTP for " + mobile + " is [" + otp + "]");
-    System.out.println("******************************************");
+        // 3. Print to terminal for you to see
+        System.out.println("******************************************");
+        System.out.println("DEVELOPER ALERT: OTP for " + mobile + " is [" + otp + "]");
+        System.out.println("******************************************");
 
-    return new SignupResponse(true, null, "OTP printed to server terminal!");
-}
+        return new SignupResponse(true, null, "OTP printed to server terminal!");
+    }
     
     public SignupResponse verifyOtp(String mobile, String userOtp) {
         String savedOtp = otpStorage.get(mobile);
