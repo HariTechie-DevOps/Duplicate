@@ -135,41 +135,22 @@ document.getElementById("otp").addEventListener("input", e => {
 
 /* SEND OTP */
 function sendOtp() {
-  const mobileInput = document.getElementById("mobile");
-  const mobileError = document.getElementById("mobileError");
-
-  mobileError.style.display = "none";
-  mobileInput.classList.remove("invalid");
-
-  if (!mobileInput.value || mobileInput.value.length !== 10) {
-    mobileError.textContent = "Enter valid 10-digit mobile number";
-    mobileError.style.display = "block";
-    mobileInput.classList.add("invalid");
-    return;
-  }
-
-  document.getElementById("otpSection").style.display = "block";
-  document.getElementById("sendOtpBtn").disabled = true;
-
-  const mobile =
-    document.getElementById("code").value + mobileInput.value;
-
-  // API Call (backend optional for UI testing)
-  fetch(`${API_BASE}/api/password/send-otp`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ mobile })
-  })
-  .then(data => {
-    if (data.success) {
-        // Updated message for Developer Mode
-        alert("Developer Mode: Check your AWS Terminal for the OTP!"); 
-        document.getElementById('otpSection').style.display = 'block';
-    } else {
-        alert("Error: " + data.message);
-    }
-});
-  
+    const mobile = document.getElementById('mobileNumber').value;
+    
+    // We add ?mobile= at the end of the URL
+    fetch(`${API_BASE}/api/password/forgot?mobile=${mobile}`, {
+        method: "POST" 
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert(data.message); // Should say "OTP printed to server terminal!"
+            document.getElementById('otpSection').style.display = 'block';
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(err => alert("Connection Error: " + err));
 }
 function verifyOtp() {
     const mobile = document.getElementById('mobileNumber').value;
