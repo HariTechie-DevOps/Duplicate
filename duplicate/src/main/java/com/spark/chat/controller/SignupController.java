@@ -43,11 +43,11 @@ public class SignupController {
     }
 
    @PostMapping("/api/password/forgot")
-    public SignupResponse forgotPassword(@RequestBody Map<String, String> payload) {
-        // This looks for {"mobile": "9345..."} in the request body
-        return service.sendOtp(payload.get("mobile"));
+    public ResponseEntity<SignupResponse> forgotPassword(@RequestParam String mobile) {
+        return ResponseEntity.ok(service.sendOtp(mobile));
     }
 }
+
 
 
 
