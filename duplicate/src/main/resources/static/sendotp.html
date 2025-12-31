@@ -139,24 +139,22 @@ function sendOtp() {
     
     fetch(`${API_BASE}/api/password/forgot`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ "mobile": mobile })
+        headers: {
+            "Content-Type": "application/json" // Real-world requirement for JSON
+        },
+        body: JSON.stringify({ "mobile": mobile }) // Sending as JSON object
     })
     .then(res => res.json())
     .then(data => {
-        // Log the actual data to the browser console (F12) to see the structure
-        console.log("Response from AWS:", data);
-
-        if (data.success === true) {
-            // Hardcoded message to avoid 'undefined'
-            alert("OTP generated! Please check your AWS Ubuntu Terminal.");
+        // If 'data' exists, 'success' won't be undefined
+        if (data.success) {
+            alert(data.message); 
             document.getElementById('otpSection').style.display = 'block';
         } else {
-            // Fallback for error message
-            alert("Error: " + (data.message || "Mobile number not found in database"));
+            alert("Error: " + (data.message || "Unknown error"));
         }
     })
-    .catch(err => alert("Connection error: " + err));
+    .catch(err => alert("Server is down or IP is wrong: " + err));
 }
 function verifyOtp() {
     const mobile = document.getElementById('mobileNumber').value;
