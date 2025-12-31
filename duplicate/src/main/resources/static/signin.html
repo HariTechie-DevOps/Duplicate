@@ -159,17 +159,46 @@ const API_BASE = "http://3.109.152.31:8080";
 /* ---------- API DEFINITIONS ONLY ---------- */
 
 function login() {
-  // Placeholder API call
-  fetch(`${API_BASE}/api/signin`, {
-    method: "POST"
-    // body, headers will be added later
-  })
-  .then(() => {
-    // Login logic will be added later
-  })
-  .catch(() => {
-    // Error handling later
-  });
+
+    const loginBtn = document.querySelector("button");
+    loginBtn.disabled = true;
+    loginBtn.innerText = "Logging in...";
+    // 1. Get the values from the input boxes
+    const mobileOnly = document.getElementById("mobile").value.trim();
+    const countryCode = document.getElementById("code").value;
+    const mobile = countryCode + mobileOnly; // Combine code + number (e.g., +919876543210)
+    const password = document.getElementById("password").value;
+
+    // 2. Simple validation to make sure fields aren't empty
+    if (!mobileOnly || !password) {
+        alert("Please enter both mobile and password");
+        return;
+    }
+
+    // 3. The Actual API Call
+    fetch(`${API_BASE}/api/signin`, {
+        method: "POST",
+        headers: { 
+            "Content-Type": "application/json" 
+        },
+        body: JSON.stringify({ mobile, password }) // Send data as JSON
+    })
+    .then(res => res.json())
+    .then(data => {
+        // 4. Handle the response from Spring Boot
+        if (data.success) {
+            alert("Login Successful! Welcome " + (data.message || ""));
+            // Redirect to a dashboard or home page
+            window.location.href = "index.html"; 
+        } else {
+            // Show the error (like "Incorrect password" or "User not found")
+            alert("Login Failed: " + data.message);
+        }
+    })
+    .catch(err => {
+        console.error("Error:", err);
+        alert("Backend not reachable. Check your AWS IP and Security Groups.");
+    });
 }
 
 function forgotPassword() {
@@ -189,5 +218,6 @@ function openSignup() {
 
 </body>
 </html>
+
 
 
