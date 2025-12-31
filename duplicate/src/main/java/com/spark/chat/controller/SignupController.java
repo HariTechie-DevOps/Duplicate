@@ -38,7 +38,13 @@ public class SignupController {
         // We need the mobile number to know which OTP to check
         return service.verifyOtp(payload.get("mobile"), payload.get("otp"));
     }
+
+    @PostMapping("/api/password/forgot")
+    public ResponseEntity<SignupResponse> forgotPassword(@RequestParam String mobile) {
+        return ResponseEntity.ok(service.sendOtp(mobile));
+    }
 }
+
 
 
 
