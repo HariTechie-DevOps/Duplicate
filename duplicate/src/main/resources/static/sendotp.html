@@ -137,24 +137,20 @@ document.getElementById("otp").addEventListener("input", e => {
 function sendOtp() {
     const mobile = document.getElementById('mobileNumber').value;
     
-    fetch(`${API_BASE}/api/password/forgot`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json" // Real-world requirement for JSON
-        },
-        body: JSON.stringify({ "mobile": mobile }) // Sending as JSON object
+    // We add ?mobile= at the end of the URL
+    fetch(`${API_BASE}/api/password/forgot?mobile=${mobile}`, {
+        method: "POST" 
     })
     .then(res => res.json())
     .then(data => {
-    if (data.success) {
-        // Updated message for Developer Mode
-        alert("Developer Mode: Check your AWS Terminal for the OTP!"); 
-        document.getElementById('otpSection').style.display = 'block';
-    } else {
-      alert("Error: " + data.message);
-    }
-  });
-    .catch(err => alert("Server is down or IP is wrong: " + err));
+        if (data.success) {
+            alert(data.message); // Should say "OTP printed to server terminal!"
+            document.getElementById('otpSection').style.display = 'block';
+        } else {
+            alert("Error: " + data.message);
+        }
+    })
+    .catch(err => alert("Connection Error: " + err));
 }
 function verifyOtp() {
     const mobile = document.getElementById('mobileNumber').value;
