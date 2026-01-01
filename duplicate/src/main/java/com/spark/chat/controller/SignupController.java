@@ -55,7 +55,13 @@ public class SignupController {
         // This ensures only the user with this specific mobile is updated
         return service.updatePassword(mobile, newPassword);
     }
+
+    @GetMapping("/api/login-with-token")
+    public SignupResponse loginWithToken(@RequestParam String token) {
+        return service.loginWithToken(token);
+    }
 }
+
 
 
 
