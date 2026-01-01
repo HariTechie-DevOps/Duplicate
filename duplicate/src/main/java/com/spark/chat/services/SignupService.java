@@ -5,7 +5,7 @@ import com.spark.chat.repository.SignupRepository;
 import com.spark.chat.dto.SignupRequest;
 import com.spark.chat.dto.SignupResponse;
 import org.springframework.stereotype.Service;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.BufferedReader;
@@ -81,12 +81,13 @@ public class SignupService {
         }
         return new SignupResponse(false, "otp", "Invalid OTP entered.");
     }
-
+    @Transactional
     public SignupResponse updatePassword(String mobile, String newPassword) {
         return repo.findByMobile(mobile)
             .map(user -> {
                 user.setPassword(newPassword); // Update the password field for this user
                 repo.save(user); // Save changes back to MySQL
+                repo.flush();
                 return new SignupResponse(true, null, "Password changed successfully!");
             })
             .orElse(new SignupResponse(false, "mobile", "User not found"));
