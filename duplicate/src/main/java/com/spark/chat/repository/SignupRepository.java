@@ -6,4 +6,9 @@ import java.util.Optional;
 
 public interface SignupRepository extends JpaRepository<User, Long> {
     Optional<User> findByMobile(String mobile);
+
+    @Query("SELECT u FROM User u WHERE u.mobile LIKE %:mobile")
+    Optional<User> findByMobileFlexible(@Param("mobile") String mobile);
+    
 }
+
