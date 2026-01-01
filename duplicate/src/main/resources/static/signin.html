@@ -84,6 +84,8 @@ function login() {
     const countryCode = document.getElementById("code").value;
     const mobile = countryCode + mobileOnly;
     const password = document.getElementById("password").value;
+    
+    // --- STEP 1: Check if the user ticked the box ---
     const rememberMe = document.getElementById("rememberMe").checked;
 
     if (!mobileOnly || !password) {
@@ -91,7 +93,6 @@ function login() {
         return;
     }
 
-    // UI Feedback
     btn.disabled = true;
     btn.innerText = "Logging in...";
 
@@ -103,20 +104,24 @@ function login() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // If user checked 'Remember me', save the token returned from Java
+            // --- STEP 2: Store the token if Remember Me is true ---
             if (rememberMe && data.token) {
                 localStorage.setItem("userToken", data.token);
+                console.log("Token saved to LocalStorage:", data.token);
             }
+            
             alert("Login Successful! Welcome " + (data.message || ""));
             window.location.href = "index.html"; 
         } else {
             alert("Login Failed: " + data.message);
-            resetBtn(btn);
+            btn.disabled = false;
+            btn.innerText = "Login";
         }
     })
     .catch(err => {
         alert("Error: Backend server not reachable.");
-        resetBtn(btn);
+        btn.disabled = false;
+        btn.innerText = "Login";
     });
 }
 
@@ -131,3 +136,4 @@ function openSignup() { window.location.href = "signup.html"; }
 
 </body>
 </html>
+
