@@ -47,7 +47,16 @@ public class SignupController {
         // This looks for {"mobile": "9345..."} in the request body
         return service.sendOtp(payload.get("mobile"));
     }
+
+    @PostMapping("/api/password/reset")
+    public SignupResponse resetPassword(@RequestBody Map<String, String> payload) {
+        String mobile = payload.get("mobile");
+        String newPassword = payload.get("password");
+        // This ensures only the user with this specific mobile is updated
+        return service.updatePassword(mobile, newPassword);
+    }
 }
+
 
 
 
