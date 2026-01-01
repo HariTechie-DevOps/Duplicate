@@ -129,8 +129,8 @@ public class SignupService {
 
     // Add this new method for auto-login
     public SignupResponse loginWithToken(String token) {
-        return repo.findByToken(token) // You'll need to add this to Repository
-            .map(user -> new SignupResponse(true, user.getName(), "Auto-login Success"))
-            .orElse(new SignupResponse(false, null, "Invalid Token"));
+        return repo.findByToken(token)
+            .map(user -> new SignupResponse(true, null, user.getName(), token))
+            .orElse(new SignupResponse(false, null, "Invalid session"));
     }
 }
