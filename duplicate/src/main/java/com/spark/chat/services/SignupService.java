@@ -84,16 +84,17 @@ public class SignupService {
     @Transactional
     public SignupResponse updatePassword(String mobile, String newPassword) {
         System.out.println("DEBUG: Attempting to update password for: " + mobile);
-        System.out.println("DEBUG: New Password received: " + newPassword);
+    
         return repo.findByMobile(mobile)
             .map(user -> {
-                user.setPassword(newPassword); // Update the password field for this user
-                repo.save(user); // Save changes back to MySQL
-                repo.flush();
-                System.out.println("DEBUG: user.save() was called successfully!");
+                user.setPassword(newPassword);
+                repo.save(user);
+                System.out.println("DEBUG: Password updated in MySQL for " + mobile);
                 return new SignupResponse(true, null, "Password changed successfully!");
             })
-            System.out.println("DEBUG: User NOT found in DB for mobile: " + mobile);
-            .orElse(new SignupResponse(false, "mobile", "User not found"));
-    }
+            .orElseGet(() -> {
+                System.out.println("DEBUG: User not found for " + mobile);
+                return new SignupResponse(false, "mobile", "User not found");
+            });
+    } 
 }
