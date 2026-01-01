@@ -84,18 +84,21 @@ public class SignupService {
     }
     @Transactional
     public SignupResponse updatePassword(String mobile, String newPassword) {
-        System.out.println("DEBUG: Attempting to update password for: " + mobile);
+    // REAL-WORLD FIX: Remove all spaces and special characters except '+'
+    String cleanMobile = mobile.replaceAll("\\s+", ""); 
     
-        return repo.findByMobile(mobile)
-            .map(user -> {
-                user.setPassword(newPassword);
-                repo.save(user);
-                System.out.println("DEBUG: Password updated in MySQL for " + mobile);
-                return new SignupResponse(true, null, "Password changed successfully!");
-            })
-            .orElseGet(() -> {
-                System.out.println("DEBUG: User not found for " + mobile);
-                return new SignupResponse(false, "mobile", "User not found");
-            });
-    } 
+    System.out.println("DEBUG: Cleaned Mobile for search: [" + cleanMobile + "]");
+
+    return repo.findByMobileEndingWith(cleanMobile) 
+        .map(user -> {
+            user.setPassword(newPassword);
+            repo.save(user);
+            System.out.println("DEBUG: SUCCESS! Password updated for " + user.getMobile());
+            return new SignupResponse(true, null, "Password changed successfully!");
+        })
+        .orElseGet(() -> {
+            System.out.println("DEBUG: Still not found in DB for: " + cleanMobile);
+            return new SignupResponse(false, "mobile", "User not found");
+        });
+    }
 }
