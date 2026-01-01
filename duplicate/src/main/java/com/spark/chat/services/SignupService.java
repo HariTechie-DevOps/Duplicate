@@ -24,9 +24,25 @@ public class SignupService {
     private final ConcurrentHashMap<String, String> otpStorage = new ConcurrentHashMap<>();
 
     private final SignupRepository repo;
+    
+    @Autowired
+    private LanguageRepository langRepo; // Your new Repository
 
     public SignupService(SignupRepository repo){
         this.repo = repo;
+    }
+
+    public void saveUserLanguage(String mobile, String selectedLanguage) {
+        // 1. Check if this user already has a language set
+        LanguagePreference pref = langRepo.findByMobile(mobile)
+            .orElse(new LanguagePreference());
+
+        // 2. Set the data
+        pref.setMobile(mobile); // The Link
+        pref.setLanguage(selectedLanguage);
+
+        // 3. Save to the second table
+        langRepo.save(pref);
     }
     
     public SignupResponse handlesignup(SignupRequest request){
