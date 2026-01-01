@@ -104,6 +104,7 @@ function login() {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
+            localStorage.setItem("userMobile", mobile);
             // --- STEP 2: Store the token if Remember Me is true ---
             if (rememberMe && data.token) {
                 localStorage.setItem("userToken", data.token);
@@ -136,5 +137,6 @@ function openSignup() { window.location.href = "signup.html"; }
 
 </body>
 </html>
+
 
 
