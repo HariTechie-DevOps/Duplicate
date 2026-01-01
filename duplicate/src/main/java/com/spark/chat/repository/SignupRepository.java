@@ -8,11 +8,13 @@ import java.util.Optional;
 
 public interface SignupRepository extends JpaRepository<User, Long> {
     Optional<User> findByMobile(String mobile);
+    Optional<User> findByToken(String token);
 
     @Query("SELECT u FROM User u WHERE u.mobile LIKE %:mobile")
     Optional<User> findByMobileEndingWith(@Param("mobile") String mobile);
     
 }
+
 
 
 
