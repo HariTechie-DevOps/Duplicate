@@ -169,7 +169,7 @@ function proceed() {
     .then(data => {
         if (data.success) {
             alert("Verified! Going to reset page.");
-            window.location.href = "reset.html?mobile=" + fullMobile;
+            window.location.href = "resetpassword.html?mobile=" + fullMobile;
         } else {
             alert(data.message || "Invalid OTP. Check terminal again.");
         }
