@@ -157,6 +157,49 @@ button {
 // Make sure this matches your current EC2 Public IP exactly!
 const API_BASE = "http://13.234.225.206:8080";
 
+// --- AUTO LOGIN LOGIC ---
+window.onload = function() {
+    const savedToken = localStorage.getItem("userToken");
+    if (savedToken) {
+        // If token exists, try to login automatically
+        fetch(`${API_BASE}/api/login-with-token?token=${savedToken}`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                alert("Welcome back, " + data.message);
+                window.location.href = "index.html";
+            }
+        });
+    }
+};
+
+function login() {
+    const mobileOnly = document.getElementById("mobile").value.trim();
+    const countryCode = document.getElementById("code").value;
+    const mobile = countryCode + mobileOnly;
+    const password = document.getElementById("password").value;
+    const rememberMe = document.getElementById("rememberMe").checked;
+
+    fetch(`${API_BASE}/api/signin`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile, password })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // If "Remember me" is checked, save the token locally
+            if (rememberMe && data.token) {
+                localStorage.setItem("userToken", data.token);
+            }
+            alert("Login Successful!");
+            window.location.href = "index.html"; 
+        } else {
+            alert("Login Failed: " + data.message);
+        }
+    });
+}
+
 /* ---------- API DEFINITIONS ONLY ---------- */
 
 function login() {
@@ -213,6 +256,7 @@ function openSignup() {
 
 </body>
 </html>
+
 
 
 
