@@ -1,5 +1,5 @@
 package com.spark.chat.dto;
-@Data
+
 public class SignupResponse {
     private boolean success;
     private String message;
