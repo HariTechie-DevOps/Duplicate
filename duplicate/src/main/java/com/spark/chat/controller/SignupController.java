@@ -6,6 +6,7 @@ import com.spark.chat.repository.LanguageRepository;
 import com.spark.chat.entities.LanguagePreference;
 import org.springframework.web.bind.annotation.*; 
 import java.util.Map;
+import java.util.Optional;
 import com.spark.chat.dto.SignupRequest;
 import com.spark.chat.dto.SignupResponse;
 import com.spark.chat.services.SignupService;
@@ -82,6 +83,7 @@ public class SignupController {
         return new SignupResponse(true, null, "Language saved successfully");
     }
 }
+
 
 
 
