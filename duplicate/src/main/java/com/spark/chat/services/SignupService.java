@@ -84,20 +84,21 @@ public class SignupService {
     }
     @Transactional
     public SignupResponse updatePassword(String mobile, String newPassword) {
-    // REAL-WORLD FIX: Remove all spaces and special characters except '+'
+    // 1. Clean the mobile (removes the space between + and 91)
     String cleanMobile = mobile.replaceAll("\\s+", ""); 
     
-    System.out.println("DEBUG: Cleaned Mobile for search: [" + cleanMobile + "]");
+    System.out.println("DEBUG: Searching for: [" + cleanMobile + "]");
 
+    // 2. Call the new repository method
     return repo.findByMobileEndingWith(cleanMobile) 
         .map(user -> {
             user.setPassword(newPassword);
             repo.save(user);
-            System.out.println("DEBUG: SUCCESS! Password updated for " + user.getMobile());
+            System.out.println("DEBUG: SUCCESS! Database updated.");
             return new SignupResponse(true, null, "Password changed successfully!");
         })
         .orElseGet(() -> {
-            System.out.println("DEBUG: Still not found in DB for: " + cleanMobile);
+            System.out.println("DEBUG: FAILED! User not found for: " + cleanMobile);
             return new SignupResponse(false, "mobile", "User not found");
         });
     }
