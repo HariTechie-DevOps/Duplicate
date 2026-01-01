@@ -15,6 +15,9 @@ public class SignupController {
 
     private final SignupService service;
 
+     @Autowired
+    private LanguageRepository langRepo;
+
     public SignupController(SignupService service){
         this.service = service;
     }
@@ -60,7 +63,23 @@ public class SignupController {
     public SignupResponse loginWithToken(@RequestParam String token) {
         return service.loginWithToken(token);
     }
+
+    @PostMapping("/api/save-language")
+    public SignupResponse saveLanguage(@RequestBody Map<String, String> request) {
+        String mobile = request.get("mobile");
+        String language = request.get("language");
+
+        // Real-world logic: Check if preference exists, if so update it, else create new
+        LanguagePreference pref = langRepo.findByMobile(mobile)
+            .orElse(new LanguagePreference(mobile, language));
+    
+        pref.setLanguage(language);
+        langRepo.save(pref);
+
+        return new SignupResponse(true, null, "Language saved successfully");
+    }
 }
+
 
 
 
