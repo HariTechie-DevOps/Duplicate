@@ -1,5 +1,7 @@
 package com.spark.chat.services;
-
+import org.springframework.beans.factory.annotation.Autowired; 
+import com.spark.chat.repository.LanguageRepository;           
+import com.spark.chat.entities.LanguagePreference;             
 import com.spark.chat.entity.User;
 import com.spark.chat.repository.SignupRepository;
 import com.spark.chat.dto.SignupRequest;
