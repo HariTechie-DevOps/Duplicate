@@ -104,21 +104,19 @@ public class SignupService {
     }
 
     public SignupResponse login(String mobile, String password) {
-    return repo.findByMobile(mobile)
-        .map(user -> {
-            if (user.getPassword().equals(password)) {
-                // Generate a random token
-                String token = java.util.UUID.randomUUID().toString();
-                user.setToken(token); // Save token to DB
-                repo.save(user);
+        return repo.findByMobile(mobile)
+             .map(user -> {
+                if (user.getPassword().equals(password)) {
+                    String token = java.util.UUID.randomUUID().toString();
+                    user.setToken(token);
+                    repo.save(user);
                 
-                SignupResponse res = new SignupResponse(true, user.getName(), "Login Success");
-                res.setToken(token); // Send token to frontend
-                return res;
-            }
-            return new SignupResponse(false, null, "Wrong Password");
-        })
-        .orElse(new SignupResponse(false, null, "User not found"));
+                    // Use the 4-argument constructor here
+                    return new SignupResponse(true, null, user.getName(), token);
+                }
+                return new SignupResponse(false, "password", "Invalid password");
+            })
+            .orElse(new SignupResponse(false, "mobile", "User not found"));
     }
 
     // Add this new method for auto-login
