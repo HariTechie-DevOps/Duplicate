@@ -1,5 +1,5 @@
 package com.spark.chat.repository;
-
+import org.springframework.stereotype.Repository;
 import com.spark.chat.entities.LanguagePreference;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
