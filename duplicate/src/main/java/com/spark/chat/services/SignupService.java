@@ -105,19 +105,27 @@ public class SignupService {
 
     public SignupResponse login(String mobile, String password) {
         return repo.findByMobile(mobile)
-             .map(user -> {
+            .map(user -> {
                 if (user.getPassword().equals(password)) {
+                    // 1. Generate a new unique token
                     String token = java.util.UUID.randomUUID().toString();
-                    user.setToken(token);
-                    repo.save(user);
                 
-                    // Use the 4-argument constructor here
+                    // 2. Set it in the user object
+                    user.setToken(token);
+                
+                    // 3. IMPORTANT: Save the user back to the DB
+                    repo.save(user); 
+                
+                    System.out.println("DEBUG: Token generated and saved for: " + mobile);
+                
+                    // 4. Return success with the token (4-argument constructor)
                     return new SignupResponse(true, null, user.getName(), token);
+                } else {
+                    return new SignupResponse(false, "password", "Invalid password");
                 }
-                return new SignupResponse(false, "password", "Invalid password");
             })
             .orElse(new SignupResponse(false, "mobile", "User not found"));
-    }
+        }
 
     // Add this new method for auto-login
     public SignupResponse loginWithToken(String token) {
