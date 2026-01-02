@@ -24,7 +24,12 @@ public class SignupController {
     public SignupController(SignupService service) {
         this.service = service;
     }
-
+    @GetMapping("/{path:[^\\.]*}")
+    public String redirect() {
+        // This ensures that if a user visits /signup or /signin, 
+        // Spring Boot lets React handle it.
+        return "forward:/index.html";
+    }
     /**
      * 1. GET ALL LANGUAGES
      * This connects to your Figma "Language Badges".
@@ -55,7 +60,7 @@ public class SignupController {
     public SignupResponse signin(@RequestBody SignupRequest request) {
         return service.handleSignin(request); 
     }
-
+    
     /**
      * 3. OTP & PASSWORD MANAGEMENT
      */
@@ -93,3 +98,4 @@ public class SignupController {
         return new SignupResponse(true, null, "Language saved successfully");
     }
 }
+
