@@ -1,177 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<title>Animated Translated Chat + Stars</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <title>UChat | Welcome</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
 
-<style>
-/* ================== GLOBAL ================== */
-body {
-  margin: 0;
-  height: 100vh;
-  background: radial-gradient(ellipse at bottom, #0b1220 0%, #05070f 100%);
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  overflow: hidden;
-  position: relative;
-}
+    <style>
+        /* ================== FIGMA BACKGROUND ================== */
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            /* Matches your Figma radial glow design */
+            background: radial-gradient(circle at center, #1a1c2e 0%, #0b0d14 100%);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+        }
 
-/* ================== STARS ================== */
-.stars {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  z-index: 1;
-}
+        /* ================== ANIMATED STARS ================== */
+        .stars { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s infinite; }
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
 
-.star {
-  position: absolute;
-  background: white;
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: twinkle 3s ease-in-out infinite;
-}
+        /* ================== BUBBLE ANIMATIONS ================== */
+        @keyframes bubblePop {
+            0% { opacity: 0; transform: scale(0.4) translateY(30px); }
+            20% { opacity: 1; transform: scale(1.08) translateY(0); }
+            80% { opacity: 1; transform: scale(1) translateY(0); }
+            100% { opacity: 0; transform: scale(0.8) translateY(-20px); }
+        }
 
-@keyframes twinkle {
-  0% { opacity: 0.2; transform: scale(0.8); }
-  50% { opacity: 1; transform: scale(1.2); }
-  100% { opacity: 0.2; transform: scale(0.8); }
-}
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px var(--glow); }
+            50% { box-shadow: 0 0 40px var(--glow); }
+        }
 
-/* ================== MESSAGE ================== */
-.phone-message {
-  position: absolute;
-  top: 20%;
-  pointer-events: none;
-  z-index: 30;
-  animation: message-fade 4.5s ease-in-out forwards;
-}
+        .animate-bubble { animation: bubblePop 4.5s ease-in-out forwards; }
+        .glow-effect { animation: pulseGlow 2s infinite ease-in-out; }
 
-.phone-message.right { right: 12%; }
-.phone-message.left { left: 12%; }
-
-.bubble {
-  position: relative;
-  padding: 16px 20px;
-  border-radius: 16px;
-  max-width: 340px;
-  color: white;
-  backdrop-filter: blur(16px);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
-  z-index: 2;
-}
-
-.bubble.blue {
-  background: linear-gradient(135deg, rgba(59,130,246,0.95), rgba(37,99,235,0.95));
-  border-top-right-radius: 6px;
-}
-
-.bubble.purple {
-  background: linear-gradient(135deg, rgba(168,85,247,0.95), rgba(147,51,234,0.95));
-  border-top-left-radius: 6px;
-}
-
-.translated {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 1.45;
-  margin-bottom: 10px;
-}
-
-.original {
-  font-size: 12px;
-  opacity: 0.8;
-  font-style: italic;
-}
-
-.divider {
-  border-top: 1px solid rgba(255,255,255,0.3);
-  margin: 8px 0;
-}
-
-/* ================== GLOW ================== */
-.glow {
-  position: absolute;
-  inset: 0;
-  border-radius: 16px;
-  filter: blur(8px);
-  z-index: 1;
-  animation: glow 1.8s ease-in-out infinite;
-}
-
-.glow.blue {
-  color: rgba(59,130,246,1);
-  box-shadow: 0 0 25px rgba(59,130,246,0.7);
-}
-
-.glow.purple {
-  color: rgba(168,85,247,1);
-  box-shadow: 0 0 25px rgba(168,85,247,0.7);
-}
-
-@keyframes glow {
-  0% { box-shadow: 0 0 25px currentColor; }
-  50% { box-shadow: 0 0 45px currentColor; }
-  100% { box-shadow: 0 0 25px currentColor; }
-}
-
-/* ================== MESSAGE ANIMATION ================== */
-@keyframes message-fade {
-  0% { opacity: 0; transform: translateY(30px) scale(0.3); }
-  15% { opacity: 1; transform: translateY(0) scale(1.05); }
-  75% { opacity: 1; transform: translateY(0) scale(1); }
-  100% { opacity: 0; transform: translateY(-15px) scale(0.9); }
-}
-</style>
+        /* ================== UI OVERLAY ================== */
+        .hero-content {
+            position: relative; z-index: 50;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            height: 100vh; text-align: center; color: white;
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- ⭐ STARS -->
-<div class="stars" id="stars"></div>
+    <div class="stars" id="stars"></div>
 
-<!-- 💬 MESSAGE RIGHT -->
-<div class="phone-message right" style="animation-delay: 0.5s">
-  <div class="bubble blue">
-    <div class="translated">Hello, how are you?</div>
-    <div class="divider"></div>
-    <div class="original">Original: こんにちは！元気ですか？</div>
-  </div>
-  <div class="glow blue"></div>
-</div>
+    <div class="hero-content">
+        <h1 class="text-6xl font-bold mb-4 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+            UChat
+        </h1>
+        <p class="text-gray-400 text-lg mb-8 max-w-md">
+            Breaking language barriers in real-time.
+        </p>
+        <button onclick="location.href='/signin.html'" 
+                class="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition shadow-xl">
+            Get Started
+        </button>
+    </div>
 
-<!-- 💬 MESSAGE LEFT -->
-<div class="phone-message left" style="animation-delay: 2s">
-  <div class="bubble purple">
-    <div class="translated">元気だよ！あなたは？</div>
-    <div class="divider"></div>
-    <div class="original">Original: I'm doing great! What about you?</div>
-  </div>
-  <div class="glow purple"></div>
-</div>
+    <script>
+        /* 1. Star Factory */
+        const starsContainer = document.getElementById("stars");
+        for (let i = 0; i < 80; i++) {
+            const star = document.createElement("div");
+            star.className = "star";
+            const size = Math.random() * 2 + 1;
+            star.style.width = size + "px"; star.style.height = size + "px";
+            star.style.left = Math.random() * 100 + "%"; star.style.top = Math.random() * 100 + "%";
+            star.style.animationDelay = Math.random() * 3 + "s";
+            starsContainer.appendChild(star);
+        }
 
-<!-- ================== JS ================== -->
-<script>
-/* ===== Animated Stars (React → JS) ===== */
-const starsContainer = document.getElementById("stars");
-const STAR_COUNT = 50;
+        /* 2. Message Bubble Function (MessageBubble.tsx) */
+        function spawnMessage(original, translated, side, delay) {
+            setTimeout(() => {
+                const div = document.createElement('div');
+                div.className = "absolute z-30 animate-bubble";
+                div.style.top = "20%";
+                side === 'right' ? div.style.right = "10%" : div.style.left = "10%";
+                
+                const theme = side === 'right' ? 'from-blue-500 to-blue-600' : 'from-purple-500 to-purple-600';
+                const glow = side === 'right' ? 'rgba(59,130,246,0.5)' : 'rgba(168,85,247,0.5)';
 
-for (let i = 0; i < STAR_COUNT; i++) {
-  const star = document.createElement("div");
-  star.className = "star";
+                div.innerHTML = `
+                    <div class="relative p-6 rounded-2xl backdrop-blur-xl border border-white/10 bg-gradient-to-br ${theme} text-white shadow-2xl">
+                        <div class="text-lg font-bold">${original}</div>
+                        <div class="h-[1px] bg-white/20 my-2"></div>
+                        <div class="text-sm opacity-90">${translated}</div>
+                        <div class="absolute inset-0 rounded-2xl -z-10 glow-effect" style="--glow: ${glow}"></div>
+                    </div>
+                `;
+                document.body.appendChild(div);
+                setTimeout(() => div.remove(), 5000);
+            }, delay);
+        }
 
-  const size = Math.random() * 3 + 1;
-  const delay = Math.random() * 3;
-
-  star.style.width = size + "px";
-  star.style.height = size + "px";
-  star.style.left = Math.random() * 100 + "%";
-  star.style.top = Math.random() * 100 + "%";
-  star.style.animationDelay = delay + "s";
-
-  starsContainer.appendChild(star);
-}
-</script>
-
+        /* 3. Initial Animation Sequence */
+        window.onload = () => {
+            spawnMessage("Hey! How are you?", "¡Hola! ¿Cómo estás?", "left", 1000);
+            spawnMessage("I am coding UChat!", "¡Estoy programando UChat!", "right", 2500);
+        };
+    </script>
 </body>
 </html>
