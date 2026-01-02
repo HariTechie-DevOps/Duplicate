@@ -1,101 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UChat | Welcome</title>
-    <style>
-        body, html { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100%; 
-            overflow: hidden; 
-            background: #000; 
-            font-family: 'Segoe UI', sans-serif; 
-        }
+<meta charset="UTF-8" />
+<title>Animated Translated Chat + Stars</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        /* Fixed: z-index set to 1 so it's not hidden behind the body */
-        #landingVideo {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1;
-            object-fit: cover;
-        }
+<style>
+/* ================== GLOBAL ================== */
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(ellipse at bottom, #0b1220 0%, #05070f 100%);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  overflow: hidden;
+  position: relative;
+}
 
-        /* Overlay must be higher than the video z-index */
-        .content-overlay {
-            position: absolute;
-            bottom: 15%;
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
-            z-index: 10;
-        }
+/* ================== STARS ================== */
+.stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
 
-        .btn-start {
-            padding: 16px 45px;
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-            background: linear-gradient(135deg, #6c63ff, #4b45cc);
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
-            transition: transform 0.3s ease;
-        }
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.6;
+  animation: twinkle 3s ease-in-out infinite;
+}
 
-        .btn-start:hover { transform: scale(1.05); }
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0.2; transform: scale(0.8); }
+}
 
-        .show-ui { opacity: 1 !important; }
-    </style>
+/* ================== MESSAGE ================== */
+.phone-message {
+  position: absolute;
+  top: 20%;
+  pointer-events: none;
+  z-index: 30;
+  animation: message-fade 4.5s ease-in-out forwards;
+}
+
+.phone-message.right { right: 12%; }
+.phone-message.left { left: 12%; }
+
+.bubble {
+  position: relative;
+  padding: 16px 20px;
+  border-radius: 16px;
+  max-width: 340px;
+  color: white;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.45);
+  z-index: 2;
+}
+
+.bubble.blue {
+  background: linear-gradient(135deg, rgba(59,130,246,0.95), rgba(37,99,235,0.95));
+  border-top-right-radius: 6px;
+}
+
+.bubble.purple {
+  background: linear-gradient(135deg, rgba(168,85,247,0.95), rgba(147,51,234,0.95));
+  border-top-left-radius: 6px;
+}
+
+.translated {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: 10px;
+}
+
+.original {
+  font-size: 12px;
+  opacity: 0.8;
+  font-style: italic;
+}
+
+.divider {
+  border-top: 1px solid rgba(255,255,255,0.3);
+  margin: 8px 0;
+}
+
+/* ================== GLOW ================== */
+.glow {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  filter: blur(8px);
+  z-index: 1;
+  animation: glow 1.8s ease-in-out infinite;
+}
+
+.glow.blue {
+  color: rgba(59,130,246,1);
+  box-shadow: 0 0 25px rgba(59,130,246,0.7);
+}
+
+.glow.purple {
+  color: rgba(168,85,247,1);
+  box-shadow: 0 0 25px rgba(168,85,247,0.7);
+}
+
+@keyframes glow {
+  0% { box-shadow: 0 0 25px currentColor; }
+  50% { box-shadow: 0 0 45px currentColor; }
+  100% { box-shadow: 0 0 25px currentColor; }
+}
+
+/* ================== MESSAGE ANIMATION ================== */
+@keyframes message-fade {
+  0% { opacity: 0; transform: translateY(30px) scale(0.3); }
+  15% { opacity: 1; transform: translateY(0) scale(1.05); }
+  75% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-15px) scale(0.9); }
+}
+</style>
 </head>
+
 <body>
 
-    <video autoplay muted playsinline id="landingVideo">
-        <source src="/assets/videos/landing_motion.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
-    </video>
+<!-- ⭐ STARS -->
+<div class="stars" id="stars"></div>
 
-    <div class="content-overlay" id="uiLayer">
-        <button class="btn-start" onclick="enterApp()">Get Started</button>
-    </div>
+<!-- 💬 MESSAGE RIGHT -->
+<div class="phone-message right" style="animation-delay: 0.5s">
+  <div class="bubble blue">
+    <div class="translated">Hello, how are you?</div>
+    <div class="divider"></div>
+    <div class="original">Original: こんにちは！元気ですか？</div>
+  </div>
+  <div class="glow blue"></div>
+</div>
 
-    <script>
-        const video = document.getElementById('landingVideo');
-        const uiLayer = document.getElementById('uiLayer');
+<!-- 💬 MESSAGE LEFT -->
+<div class="phone-message left" style="animation-delay: 2s">
+  <div class="bubble purple">
+    <div class="translated">元気だよ！あなたは？</div>
+    <div class="divider"></div>
+    <div class="original">Original: I'm doing great! What about you?</div>
+  </div>
+  <div class="glow purple"></div>
+</div>
 
-        // REAL-WORLD FIX: Force the video to play after the page loads
-        window.addEventListener('DOMContentLoaded', () => {
-            video.play().catch(error => {
-                console.log("Autoplay blocked. User interaction required.");
-            });
-        });
+<!-- ================== JS ================== -->
+<script>
+/* ===== Animated Stars (React → JS) ===== */
+const starsContainer = document.getElementById("stars");
+const STAR_COUNT = 50;
 
-        // Show button after 3.5 seconds
-        video.ontimeupdate = function() {
-            if(video.currentTime >= 3.5) {
-                uiLayer.classList.add('show-ui');
-            }
-        };
+for (let i = 0; i < STAR_COUNT; i++) {
+  const star = document.createElement("div");
+  star.className = "star";
 
-        function enterApp() {
-            window.location.href = "/signin.html";
-        }
+  const size = Math.random() * 3 + 1;
+  const delay = Math.random() * 3;
 
-        // Redirect when video ends
-        video.onended = function() {
-            enterApp();
-        };
+  star.style.width = size + "px";
+  star.style.height = size + "px";
+  star.style.left = Math.random() * 100 + "%";
+  star.style.top = Math.random() * 100 + "%";
+  star.style.animationDelay = delay + "s";
 
-        // Click video to skip
-        video.addEventListener('click', enterApp);
-    </script>
+  starsContainer.appendChild(star);
+}
+</script>
+
 </body>
 </html>
