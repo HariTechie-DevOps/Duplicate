@@ -52,9 +52,8 @@
 </head>
 <body>
 
-    <video autoplay muted playsinline id="landingVideo">
+    <video autoplay muted loop playsinline id="landingVideo">
         <source src="assets/videos/landing_motion.mp4" type="video/mp4">
-        Your browser does not support HTML5 video.
     </video>
 
     <div class="content-overlay" id="uiLayer">
@@ -62,25 +61,18 @@
     </div>
 
     <script>
-        const video = document.getElementById('landingVideo');
-        const ui = document.getElementById('uiLayer');
+    const video = document.getElementById('landingVideo');
 
-        // Real-world logic: Show the button when the video is almost finished (at 4 seconds)
-        video.ontimeupdate = function() {
-            if(video.currentTime >= 4) {
-                ui.classList.add('show-ui');
-            }
-        };
+    // When the video ends, move to sign-in
+    video.onended = function() {
+        window.location.href = "signin.html";
+    };
 
-        function enterApp() {
-            // Check if user has a saved token from your previous "Remember Me" logic
-            const token = localStorage.getItem("userToken");
-            if (token) {
-                window.location.href = "chooseyourlanguage.html";
-            } else {
-                window.location.href = "signin.html";
-            }
-        }
-    </script>
+    // Backup: If the user clicks the video, they can skip to sign-in immediately
+    video.addEventListener('click', () => {
+        window.location.href = "signin.html";
+    });
+</script>
+    
 </body>
 </html>
