@@ -2,32 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UChat | Welcome</title>
     <style>
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; }
+        body, html { 
+            margin: 0; 
+            padding: 0; 
+            width: 100%; 
+            height: 100%; 
+            overflow: hidden; 
+            background: #000; 
+            font-family: 'Segoe UI', sans-serif; 
+        }
 
-        /* Fullscreen Video Background */
+        /* Fixed: z-index set to 1 so it's not hidden behind the body */
         #landingVideo {
             position: fixed;
-            right: 0;
-            bottom: 0;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            z-index: -100;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
             object-fit: cover;
         }
 
-        /* Overlay for the Button */
+        /* Overlay must be higher than the video z-index */
         .content-overlay {
             position: absolute;
             bottom: 15%;
             width: 100%;
             display: flex;
             justify-content: center;
-            opacity: 0; /* Hidden initially */
-            transition: opacity 1s ease-in;
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
             z-index: 10;
         }
 
@@ -46,7 +53,6 @@
 
         .btn-start:hover { transform: scale(1.05); }
 
-        /* Class to show button when video reaches end */
         .show-ui { opacity: 1 !important; }
     </style>
 </head>
@@ -54,36 +60,42 @@
 
     <video autoplay muted playsinline id="landingVideo">
         <source src="/assets/videos/landing_motion.mp4" type="video/mp4">
-        Your browser does not support the video tag.
+        Your browser does not support HTML5 video.
     </video>
 
-<div class="content-overlay" id="uiLayer">
-    <button class="btn-start" onclick="enterApp()">Get Started</button>
-</div>
+    <div class="content-overlay" id="uiLayer">
+        <button class="btn-start" onclick="enterApp()">Get Started</button>
+    </div>
 
-<script>
-    const video = document.getElementById('landingVideo');
-    const uiLayer = document.getElementById('uiLayer');
+    <script>
+        const video = document.getElementById('landingVideo');
+        const uiLayer = document.getElementById('uiLayer');
 
-    // Show the "Get Started" button after 3 seconds (real-world example: YouTube ads 'skip' timing)
-    setTimeout(() => {
-        uiLayer.classList.add('show-ui');
-    }, 3000);
+        // REAL-WORLD FIX: Force the video to play after the page loads
+        window.addEventListener('DOMContentLoaded', () => {
+            video.play().catch(error => {
+                console.log("Autoplay blocked. User interaction required.");
+            });
+        });
 
-    // Redirect automatically when video finishes
-    video.onended = function() {
-        enterApp();
-    };
+        // Show button after 3.5 seconds
+        video.ontimeupdate = function() {
+            if(video.currentTime >= 3.5) {
+                uiLayer.classList.add('show-ui');
+            }
+        };
 
-    function enterApp() {
-        window.location.href = "signin.html";
-    }
+        function enterApp() {
+            window.location.href = "/signin.html";
+        }
 
-    // Allow skip on click
-    video.addEventListener('click', enterApp);
-</script>
+        // Redirect when video ends
+        video.onended = function() {
+            enterApp();
+        };
 
-    
-    
+        // Click video to skip
+        video.addEventListener('click', enterApp);
+    </script>
 </body>
 </html>
