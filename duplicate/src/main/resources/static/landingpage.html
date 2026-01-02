@@ -52,27 +52,37 @@
 </head>
 <body>
 
-    <video autoplay muted loop playsinline id="landingVideo">
-        <source src="assets/videos/landing_motion.mp4" type="video/mp4">
-    </video>
+    <video autoplay muted playsinline id="landingVideo">
+    <source src="assets/videos/landing_motion.mp4" type="video/mp4">
+</video>
 
-    <div class="content-overlay" id="uiLayer">
-        <button class="btn-start" onclick="enterApp()">Get Started</button>
-    </div>
+<div class="content-overlay" id="uiLayer">
+    <button class="btn-start" onclick="enterApp()">Get Started</button>
+</div>
 
-    <script>
+<script>
     const video = document.getElementById('landingVideo');
+    const uiLayer = document.getElementById('uiLayer');
 
-    // When the video ends, move to sign-in
+    // Show the "Get Started" button after 3 seconds (real-world example: YouTube ads 'skip' timing)
+    setTimeout(() => {
+        uiLayer.classList.add('show-ui');
+    }, 3000);
+
+    // Redirect automatically when video finishes
     video.onended = function() {
-        window.location.href = "signin.html";
+        enterApp();
     };
 
-    // Backup: If the user clicks the video, they can skip to sign-in immediately
-    video.addEventListener('click', () => {
+    function enterApp() {
         window.location.href = "signin.html";
-    });
+    }
+
+    // Allow skip on click
+    video.addEventListener('click', enterApp);
 </script>
+
+    
     
 </body>
 </html>
