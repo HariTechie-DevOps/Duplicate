@@ -25,6 +25,12 @@ public class SignupController {
     public SignupController(SignupService service){
         this.service = service;
     }
+
+    @GetMapping("/")
+    public String showLandingPage() {
+        // This looks for "landingpage.html" in the templates folder
+        return "landingpage"; 
+    }
     
     @PostMapping("/api/signup")
     public SignupResponse signup(@RequestBody SignupRequest request) {
@@ -83,6 +89,7 @@ public class SignupController {
         return new SignupResponse(true, null, "Language saved successfully");
     }
 }
+
 
 
 
