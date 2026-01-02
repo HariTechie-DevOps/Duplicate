@@ -1,113 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" />
-    <title>UChat | Welcome</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <style>
-        /* ================== FIGMA BACKGROUND ================== */
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            overflow: hidden;
-            /* Matches your Figma radial glow design */
-            background: radial-gradient(circle at center, #1a1c2e 0%, #0b0d14 100%);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-        }
-
-        /* ================== ANIMATED STARS ================== */
-        .stars { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-        .star { position: absolute; background: white; border-radius: 50%; animation: twinkle 3s infinite; }
-        @keyframes twinkle {
-            0%, 100% { opacity: 0.2; transform: scale(0.8); }
-            50% { opacity: 1; transform: scale(1.2); }
-        }
-
-        /* ================== BUBBLE ANIMATIONS ================== */
-        @keyframes bubblePop {
-            0% { opacity: 0; transform: scale(0.4) translateY(30px); }
-            20% { opacity: 1; transform: scale(1.08) translateY(0); }
-            80% { opacity: 1; transform: scale(1) translateY(0); }
-            100% { opacity: 0; transform: scale(0.8) translateY(-20px); }
-        }
-
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px var(--glow); }
-            50% { box-shadow: 0 0 40px var(--glow); }
-        }
-
-        .animate-bubble { animation: bubblePop 4.5s ease-in-out forwards; }
-        .glow-effect { animation: pulseGlow 2s infinite ease-in-out; }
-
-        /* ================== UI OVERLAY ================== */
-        .hero-content {
-            position: relative; z-index: 50;
-            display: flex; flex-direction: column;
-            align-items: center; justify-content: center;
-            height: 100vh; text-align: center; color: white;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page | My Project</title>
+    
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-    <div class="stars" id="stars"></div>
+    <header>
+        <nav>
+            <a th:href="@{/}">Home</a>
+            <a th:href="@{/login}" class="btn-login">Login</a>
+        </nav>
+    </header>
 
-    <div class="hero-content">
-        <h1 class="text-6xl font-bold mb-4 tracking-tighter bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-            UChat
-        </h1>
-        <p class="text-gray-400 text-lg mb-8 max-w-md">
-            Breaking language barriers in real-time.
-        </p>
-        <button onclick="location.href='/signin.html'" 
-                class="px-8 py-4 bg-white text-black font-bold rounded-full hover:scale-105 transition shadow-xl">
-            Get Started
-        </button>
-    </div>
+    <main>
+        <section class="hero">
+            <h1>Welcome to My Project</h1>
+            <p>Design converted from Figma AI.</p>
+            <img src="/images/hero-bg.png" onerror="handleImageError(this)" alt="Main Illustration">
+        </section>
+    </main>
 
-    <script>
-        /* 1. Star Factory */
-        const starsContainer = document.getElementById("stars");
-        for (let i = 0; i < 80; i++) {
-            const star = document.createElement("div");
-            star.className = "star";
-            const size = Math.random() * 2 + 1;
-            star.style.width = size + "px"; star.style.height = size + "px";
-            star.style.left = Math.random() * 100 + "%"; star.style.top = Math.random() * 100 + "%";
-            star.style.animationDelay = Math.random() * 3 + "s";
-            starsContainer.appendChild(star);
-        }
+    <footer>
+        <p>&copy; 2024 Your Project Name</p>
+    </footer>
 
-        /* 2. Message Bubble Function (MessageBubble.tsx) */
-        function spawnMessage(original, translated, side, delay) {
-            setTimeout(() => {
-                const div = document.createElement('div');
-                div.className = "absolute z-30 animate-bubble";
-                div.style.top = "20%";
-                side === 'right' ? div.style.right = "10%" : div.style.left = "10%";
-                
-                const theme = side === 'right' ? 'from-blue-500 to-blue-600' : 'from-purple-500 to-purple-600';
-                const glow = side === 'right' ? 'rgba(59,130,246,0.5)' : 'rgba(168,85,247,0.5)';
-
-                div.innerHTML = `
-                    <div class="relative p-6 rounded-2xl backdrop-blur-xl border border-white/10 bg-gradient-to-br ${theme} text-white shadow-2xl">
-                        <div class="text-lg font-bold">${original}</div>
-                        <div class="h-[1px] bg-white/20 my-2"></div>
-                        <div class="text-sm opacity-90">${translated}</div>
-                        <div class="absolute inset-0 rounded-2xl -z-10 glow-effect" style="--glow: ${glow}"></div>
-                    </div>
-                `;
-                document.body.appendChild(div);
-                setTimeout(() => div.remove(), 5000);
-            }, delay);
-        }
-
-        /* 3. Initial Animation Sequence */
-        window.onload = () => {
-            spawnMessage("Hey! How are you?", "¡Hola! ¿Cómo estás?", "left", 1000);
-            spawnMessage("I am coding UChat!", "¡Estoy programando UChat!", "right", 2500);
-        };
-    </script>
+    <script th:src="@{/js/image-fallback.js}"></script>
 </body>
 </html>
