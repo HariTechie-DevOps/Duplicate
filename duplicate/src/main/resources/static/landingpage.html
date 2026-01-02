@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>UChat | Welcome</title>
+    <style>
+        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background: #000; font-family: 'Inter', sans-serif; }
+
+        /* Fullscreen Video Background */
+        #landingVideo {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            object-fit: cover;
+        }
+
+        /* Overlay for the Button */
+        .content-overlay {
+            position: absolute;
+            bottom: 15%;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            opacity: 0; /* Hidden initially */
+            transition: opacity 1s ease-in;
+            z-index: 10;
+        }
+
+        .btn-start {
+            padding: 16px 45px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            background: linear-gradient(135deg, #6c63ff, #4b45cc);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(108, 99, 255, 0.4);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-start:hover { transform: scale(1.05); }
+
+        /* Class to show button when video reaches end */
+        .show-ui { opacity: 1 !important; }
+    </style>
+</head>
+<body>
+
+    <video autoplay muted playsinline id="landingVideo">
+        <source src="assets/videos/landing_motion.mp4" type="video/mp4">
+        Your browser does not support HTML5 video.
+    </video>
+
+    <div class="content-overlay" id="uiLayer">
+        <button class="btn-start" onclick="enterApp()">Get Started</button>
+    </div>
+
+    <script>
+        const video = document.getElementById('landingVideo');
+        const ui = document.getElementById('uiLayer');
+
+        // Real-world logic: Show the button when the video is almost finished (at 4 seconds)
+        video.ontimeupdate = function() {
+            if(video.currentTime >= 4) {
+                ui.classList.add('show-ui');
+            }
+        };
+
+        function enterApp() {
+            // Check if user has a saved token from your previous "Remember Me" logic
+            const token = localStorage.getItem("userToken");
+            if (token) {
+                window.location.href = "chooseyourlanguage.html";
+            } else {
+                window.location.href = "signin.html";
+            }
+        }
+    </script>
+</body>
+</html>
