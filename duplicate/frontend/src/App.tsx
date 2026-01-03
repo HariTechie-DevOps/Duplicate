@@ -51,18 +51,24 @@ function CinematicLanding() {
     <div className="relative w-screen h-screen overflow-hidden bg-black font-sans"> 
       <AnimatePresence mode="wait">
         {!showLogo ? (
-          <motion.div key="chat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full relative">
+          <motion.div 
+            key="chat" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="w-full h-full relative bg-transparent"
+          >
             <AnimatedStars />
             
-            {/* 1. BACKGROUND IMAGE: Fixed path and z-index */}
+            {/* BACKGROUND IMAGE - Explicitly set to absolute bottom layer */}
             <img 
                src="/assets/chat-scene.png" 
-               className="absolute inset-0 w-full h-full object-cover -z-20" 
+               className="absolute inset-0 w-full h-full object-cover -z-30 pointer-events-none" 
                alt="chat background"
             />
             
-            {/* 2. GRADIENT OVERLAY: Makes text readable even if image is bright */}
-            <div className="absolute inset-0 bg-black/30 -z-10" />
+            {/* GRADIENT OVERLAY - Mimics the cinematic look of your goal image */}
+            <div className="absolute inset-0 bg-black/40 -z-20" />
             
             <AnimatePresence mode="wait">
               {msg && (
@@ -86,18 +92,20 @@ function CinematicLanding() {
             </div>
           </motion.div>
         ) : (
-          <motion.div key="logo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full h-full flex flex-col items-center justify-center relative">
+          <motion.div 
+            key="logo" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            className="w-full h-full flex flex-col items-center justify-center relative bg-transparent"
+          >
             <AnimatedStars />
 
-            {/* 1. LOGO SCENE IMAGE */}
+            {/* LOGO SCENE IMAGE */}
             <img 
               src="/assets/logo-scene.png" 
-              className="absolute inset-0 w-full h-full object-cover -z-20 opacity-70" 
+              className="absolute inset-0 w-full h-full object-cover -z-30 opacity-70 pointer-events-none" 
               alt="logo background"
             />
-            
-            {/* 2. SUBTLE VIGNETTE OVERLAY */}
-            <div className="absolute inset-0 bg-radial-gradient(from center, transparent, black) -z-10 opacity-50" />
 
             <div className="z-10 text-center px-4">
               <motion.h1 initial={{y: 20}} animate={{y:0}} className="text-white text-7xl md:text-9xl font-thin mb-4 tracking-tighter">UChat</motion.h1>
