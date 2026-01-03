@@ -2,17 +2,17 @@ package com.spark.chat.controller;
 
 import com.spark.chat.dto.SignupRequest;
 import com.spark.chat.dto.SignupResponse;
-import com.spark.chat.entity.LanguagePreference; // Fixed package name from .entities to .entity
+import com.spark.chat.entity.LanguagePreference;
 import com.spark.chat.repository.LanguageRepository;
 import com.spark.chat.services.SignupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-// In production, change "*" to your actual domain. Using "*" is okay for development.
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class SignupController {
 
@@ -24,26 +24,30 @@ public class SignupController {
     public SignupController(SignupService service) {
         this.service = service;
     }
-    @GetMapping("/{path:[^\\.]*}")
-    public String redirect() {
-        // This ensures that if a user visits /signup or /signin, 
-        // Spring Boot lets React handle it.
-        return "forward:/index.html";
+
+    /**
+     * SPA ROUTING FIX
+     * If a user refreshes the page on /signin or /signup, Spring Boot 
+     * usually throws a 404. This forwards those requests to React's index.html.
+     */
+    @GetMapping(value = {"/signin", "/signup", "/send-otp", "/reset-password", "/choose-language"})
+    public ModelAndView redirectToIndex() {
+        return new ModelAndView("forward:/index.html");
     }
+
     /**
      * 1. GET ALL LANGUAGES
-     * This connects to your Figma "Language Badges".
-     * It fetches real data from your LanguageRepository.
      */
     @GetMapping("/api/languages")
     public List<String> getSupportedLanguages() {
-        // Real-world logic: Fetch from DB. If DB is empty, return defaults.
         List<LanguagePreference> allPrefs = langRepo.findAll();
         if (allPrefs.isEmpty()) {
-            return Arrays.asList("English", "Japanese", "Spanish", "French", "German", "Hindi");
+            // Default fallbacks for the Cinematic Landing bubbles
+            return Arrays.asList("English", "Japanese", "Spanish", "French", "German", "Hindi", "Tamil");
         }
         return allPrefs.stream()
                 .map(LanguagePreference::getLanguage)
+                .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
     }
@@ -87,7 +91,6 @@ public class SignupController {
         String mobile = request.get("mobile");
         String language = request.get("language");
 
-        // Real-world: Find existing or create new preference
         LanguagePreference pref = langRepo.findByMobile(mobile)
                 .orElse(new LanguagePreference());
         
@@ -98,4 +101,3 @@ public class SignupController {
         return new SignupResponse(true, null, "Language saved successfully");
     }
 }
-
