@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 export default function ChooseLanguage() {
   const [selectedLang, setSelectedLang] = useState('');
   const navigate = useNavigate();
-  const API_BASE = "http://13.234.225.206:8080";
+  const API_BASE = "http://52.66.154.31:8080";
 
   const continueApp = async () => {
     const userMobile = localStorage.getItem("userMobile");
