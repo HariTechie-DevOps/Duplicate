@@ -1,3 +1,4 @@
+import com.spark.chat.entity.LanguagePreference;
 public class SignupRequest {
     private String name;
     private String mobile;
