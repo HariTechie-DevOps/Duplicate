@@ -9,7 +9,7 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const API_BASE = "http://13.234.225.206:8080";
+  const API_BASE = "http://52.66.154.31:8080";
 
   useEffect(() => {
     const savedToken = localStorage.getItem("userToken");
