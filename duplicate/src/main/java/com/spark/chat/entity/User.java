@@ -18,4 +18,11 @@ public class User {
     public String mobile;
     public String password;
     public String token;
+
+    public String getName() { return name; }
+    public String getMobile() { return mobile; }
+    public int getAge() { return age; }
+    public String getGender() { return gender; }
+    public String getPassword() { return password; }
 }
+
