@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 export default function SignUp() {
   const [formData, setFormData] = useState({ name: '', age: '', gender: '', mobile: '', password: '', code: '+91' });
   const navigate = useNavigate();
-  const API_BASE = "http://13.234.225.206:8080";
+  const API_BASE = "http://52.66.154.31:8080";
 
   const handleSignup = () => {
     const fullMobile = formData.code + formData.mobile;
