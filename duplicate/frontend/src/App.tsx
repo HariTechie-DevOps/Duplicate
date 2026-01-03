@@ -54,12 +54,12 @@ function CinematicLanding() {
           <motion.div key="chat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
             <AnimatedStars />
             
-            {/* BACKGROUND FIX: Using a deep space gradient instead of a broken PNG */}
-            <div 
-               className="absolute inset-0 w-full h-full -z-10" 
-               style={{ 
-                 background: 'linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)' 
-               }}
+            {/* BACKGROUND IMAGE FOR CHAT SCENE */}
+            <img 
+               src="/assets/chat-scene.png" 
+               className="absolute inset-0 w-full h-full object-cover -z-10" 
+               alt="chat background"
+               style={{ background: 'linear-gradient(135deg, #0f0c29 0%, #24243e 100%)' }}
             />
             
             <AnimatePresence mode="wait">
@@ -87,13 +87,12 @@ function CinematicLanding() {
           <motion.div key="logo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full h-full flex flex-col items-center justify-center">
             <AnimatedStars />
 
-            {/* BACKGROUND FIX: Using a vibrant radial glow instead of a broken PNG */}
-            <div 
-              className="absolute inset-0 w-full h-full -z-10 opacity-60" 
-              style={{ 
-                background: 'radial-gradient(circle at center, #1a2a6c 0%, #b21f1f 50%, #fdbb2d 100%)',
-                filter: 'blur(60px)'
-              }}
+            {/* BACKGROUND IMAGE FOR LOGO SCENE */}
+            <img 
+              src="/assets/logo-scene.png" 
+              className="absolute inset-0 w-full h-full object-cover -z-10 opacity-60" 
+              alt="logo background"
+              style={{ background: 'radial-gradient(circle at center, #1a2a6c 0%, #0b0d1a 100%)' }}
             />
 
             <div className="z-10 text-center px-4">
@@ -143,7 +142,6 @@ function App() {
   );
 }
 
-// CRITICAL RENDER LOGIC
 const rootElement = document.getElementById('root');
 if (rootElement) {
   const root = ReactDOM.createRoot(rootElement);
