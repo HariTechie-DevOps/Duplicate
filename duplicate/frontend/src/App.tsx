@@ -55,7 +55,7 @@ function CinematicLanding() {
             <AnimatedStars />
             <img 
                src="/assets/chat-scene.png" 
-               className="absolute inset-0 w-full h-full object-cover" 
+               className="absolute inset-0 w-full h-full object-cover -z-10" // Added -z-10
                alt="background"
             />
             
@@ -85,7 +85,7 @@ function CinematicLanding() {
             <AnimatedStars />
             <img 
               src="/assets/logo-scene.png" 
-              className="absolute inset-0 w-full h-full object-cover opacity-40" 
+              className="absolute inset-0 w-full h-full object-cover opacity-60 -z-10" // Added -z-10 and boosted opacity
               alt="logo background"
             />
             <div className="z-10 text-center px-4">
