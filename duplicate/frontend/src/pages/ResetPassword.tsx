@@ -8,7 +8,7 @@ export default function ResetPassword() {
   const mobile = searchParams.get('mobile');
 
   const handleReset = () => {
-    fetch(`http://13.234.225.206:8080/api/password/reset`, {
+    fetch(`http://52.66.154.31:8080/api/password/reset`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ mobile, password })
