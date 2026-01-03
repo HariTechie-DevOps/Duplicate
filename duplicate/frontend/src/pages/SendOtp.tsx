@@ -6,7 +6,7 @@ export default function SendOtp() {
   const [otp, setOtp] = useState('');
   const [showOtp, setShowOtp] = useState(false);
   const navigate = useNavigate();
-  const API_BASE = "http://13.234.225.206:8080";
+  const API_BASE = "http://52.66.154.31:8080";
 
   const handleSend = () => {
     fetch(`${API_BASE}/api/password/forgot`, {
