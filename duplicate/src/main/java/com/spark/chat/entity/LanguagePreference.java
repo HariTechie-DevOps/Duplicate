@@ -1,4 +1,4 @@
-package com.spark.chat.entities;
+package com.spark.chat.entity;
 
 import jakarta.persistence.*;
 
