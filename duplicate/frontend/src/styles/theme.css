@@ -2,7 +2,7 @@
 
 :root {
   --font-size: 16px;
-  --background: transparent; /* Keep this transparent */
+  --background: transparent; /* Changed to transparent to allow images to show through */
   --foreground: oklch(0.145 0 0);
   --card: #ffffff;
   --card-foreground: oklch(0.145 0 0);
@@ -88,9 +88,9 @@
   }
 
   body {
-    /* Important: ensuring bg-background (transparent) is applied */
     @apply bg-background text-foreground;
-    background-color: black; /* Real-world fallback for deep space feel */
+    background-color: black; /* Real-world fallback: Ensures the screen isn't white before images load */
+    margin: 0;
   }
 
   html {
@@ -98,11 +98,8 @@
     background-color: black;
   }
 
-  h1 { font-size: var(--text-2xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  h2 { font-size: var(--text-xl); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  h3 { font-size: var(--text-lg); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  h4 { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  label { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  button { font-size: var(--text-base); font-weight: var(--font-weight-medium); line-height: 1.5; }
-  input { font-size: var(--text-base); font-weight: var(--font-weight-normal); line-height: 1.5; }
+  /* Force React root to be transparent */
+  #root {
+    background-color: transparent !important;
+  }
 }
