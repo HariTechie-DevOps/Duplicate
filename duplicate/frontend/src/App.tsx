@@ -1,3 +1,5 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
 import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
@@ -32,7 +34,7 @@ function CinematicLanding() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://13.234.225.206:8080/api/languages') // Updated with your IP
+    fetch('http://13.234.225.206:8080/api/languages') 
       .then((res) => res.json())
       .then((data) => setDynamicLanguages(data))
       .catch(() => setDynamicLanguages(['English', 'Japanese', 'Tamil', 'Hindi', 'French']));
@@ -73,7 +75,6 @@ function CinematicLanding() {
               <h1 className="text-white text-8xl font-thin mb-4">UChat</h1>
               <p className="text-white/80 text-xl mb-12">Break language barriers.</p>
               
-              {/* Login Button to enter the app */}
               <button 
                 onClick={() => navigate('/signin')}
                 className="px-8 py-3 bg-white text-black rounded-full font-bold hover:bg-gray-200 transition-all mb-8"
@@ -99,10 +100,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        {/* The Intro Page */}
         <Route path="/" element={<CinematicLanding />} />
-        
-        {/* The Auth Pages (The codes I gave you previously) */}
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/send-otp" element={<SendOtp />} />
@@ -110,5 +108,15 @@ export default function App() {
         <Route path="/choose-language" element={<ChooseLanguage />} />
       </Routes>
     </Router>
+  );
+}
+
+// --- RENDER LOGIC (CRUCIAL FOR BUILD) ---
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
   );
 }
