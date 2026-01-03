@@ -34,7 +34,7 @@ function CinematicLanding() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch('http://13.234.225.206:8080/api/languages') 
+    fetch('/api/languages') 
       .then((res) => res.json())
       .then((data) => setDynamicLanguages(data))
       .catch(() => setDynamicLanguages(['English', 'Japanese', 'Tamil', 'Hindi', 'French']));
