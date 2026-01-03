@@ -1,4 +1,5 @@
-import com.spark.chat.entity.LanguagePreference;
+package com.spark.chat.dto;
+
 public class SignupRequest {
     private String name;
     private String mobile;
@@ -6,7 +7,7 @@ public class SignupRequest {
     private String gender;
     private String password;
 
-    // Manually add these for now to fix the build immediately:
+    // Manually added getters/setters for EC2 compatibility
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getMobile() { return mobile; }
