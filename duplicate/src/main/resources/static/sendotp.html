@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Send OTP</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+}
+
+.container {
+  width: 360px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 25px;
+  border-radius: 6px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.input-group {
+  display: flex;
+}
+
+select, input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+select {
+  width: 35%;
+  margin-right: 6px;
+}
+
+input.invalid {
+  border-color: red;
+}
+
+.error {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: none;
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+button {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+button:disabled {
+  background: #aaa;
+  cursor: not-allowed;
+}
+
+/* OTP section hidden initially */
+#otpSection {
+  display: none;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2>Send OTP</h2>
+
+  <!-- Mobile Number -->
+  <label>Mobile</label>
+  <div class="input-group">
+    <select id="code">
+      <option value="+91">+91</option>
+      <option value="+1">+1</option>
+      <option value="+44">+44</option>
+    </select>
+    <input id="mobile" maxlength="10" placeholder="Enter mobile number">
+  </div>
+  <div class="error" id="mobileError"></div>
+
+  <!-- Send OTP Button -->
+  <div class="actions">
+    <button id="sendOtpBtn" onclick="sendOtp()">Send OTP</button>
+  </div>
+
+  <!-- OTP + Proceed -->
+  <div id="otpSection">
+    <label>Enter OTP</label>
+    <input id="otp" maxlength="6" placeholder="6-digit OTP">
+    <div class="error" id="otpError"></div>
+
+    <div class="actions">
+      <button onclick="proceed()">Proceed</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Make sure this matches your current EC2 Public IP exactly!
+const API_BASE = "http://13.234.225.206:8080"; // Ensure this is your current AWS IP
+
+/* 1. Send OTP Function */
+function sendOtp() {
+    const mobileInput = document.getElementById("mobile").value;
+    const countryCode = document.getElementById("code").value;
+    const fullMobile = countryCode + mobileInput;
+
+    if (mobileInput.length < 10) {
+        alert("Please enter a valid 10-digit mobile number");
+        return;
+    }
+
+    // This calls your Java Backend @PostMapping("/api/password/forgot")
+    fetch(`${API_BASE}/api/password/forgot`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile: fullMobile })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("SUCCESS: Check your AWS Ubuntu Terminal for the code!");
+            document.getElementById('otpSection').style.display = 'block';
+        } else {
+            alert("Error: " + (data.message || "Mobile number not found"));
+        }
+    })
+    .catch(err => alert("Connection Failed: Is the Java server running?"));
+}
+
+/* 2. Proceed (Verify OTP) Function */
+function proceed() {
+    const otpValue = document.getElementById("otp").value;
+    const mobileInput = document.getElementById("mobile").value;
+    const countryCode = document.getElementById("code").value;
+    const fullMobile = countryCode + mobileInput;
+
+    fetch(`${API_BASE}/api/password/verify-otp`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ mobile: fullMobile, otp: otpValue })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert("Verified! Going to reset page.");
+            window.location.href = "resetpassword.html?mobile=" + fullMobile;
+        } else {
+            alert(data.message || "Invalid OTP. Check terminal again.");
+        }
+    })
+    .catch(err => alert("Error connecting to server."));
+}
+
+/* Number only formatting */
+document.getElementById("mobile").addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g, "");
+});
+document.getElementById("otp").addEventListener("input", e => {
+    e.target.value = e.target.value.replace(/\D/g, "");
+});
+</script>
+
+</body>
+</html>
