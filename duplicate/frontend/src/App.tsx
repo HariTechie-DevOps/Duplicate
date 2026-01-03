@@ -30,7 +30,6 @@ function CinematicLanding() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Relative path works perfectly once deployed on the same server/port
     fetch('/api/languages') 
       .then((res) => res.json())
       .then((data) => setDynamicLanguages(data))
@@ -54,7 +53,6 @@ function CinematicLanding() {
         {!showLogo ? (
           <motion.div key="chat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
             <AnimatedStars />
-            {/* PUBLIC PATH: Spring Boot looks in static/assets/chat-scene.png */}
             <img 
                src="/assets/chat-scene.png" 
                className="absolute inset-0 w-full h-full object-cover" 
@@ -85,7 +83,6 @@ function CinematicLanding() {
         ) : (
           <motion.div key="logo" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="w-full h-full flex flex-col items-center justify-center">
             <AnimatedStars />
-            {/* PUBLIC PATH: Spring Boot looks in static/assets/logo-scene.png */}
             <img 
               src="/assets/logo-scene.png" 
               className="absolute inset-0 w-full h-full object-cover opacity-40" 
@@ -123,7 +120,7 @@ function CinematicLanding() {
   );
 }
 
-export default function App() {
+function App() {
   return (
     <Router>
       <Routes>
@@ -137,3 +134,16 @@ export default function App() {
     </Router>
   );
 }
+
+// CRITICAL RENDER LOGIC - This is what starts the app
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
+}
+
+export default App;
