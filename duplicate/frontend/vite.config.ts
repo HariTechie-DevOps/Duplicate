@@ -4,8 +4,8 @@ import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  // Add this line to fix the image/asset paths
-  base: './', 
+  // CHANGE THIS LINE from './' to '/'
+  base: '/', 
   plugins: [
     react(),
     tailwindcss(),
