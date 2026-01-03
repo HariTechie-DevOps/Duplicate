@@ -48,7 +48,7 @@ function CinematicLanding() {
   const msg = conversation[currentMessage];
 
   return (
-    <div className="relative w-screen h-screen overflow-hidden bg-black font-sans">
+    <div className="relative w-screen h-screen overflow-hidden font-sans"> 
       <AnimatePresence mode="wait">
         {!showLogo ? (
           <motion.div key="chat" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="w-full h-full">
