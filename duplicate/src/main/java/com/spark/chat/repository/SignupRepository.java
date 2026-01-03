@@ -1,5 +1,5 @@
 package com.spark.chat.repository;
-
+import com.spark.chat.entity.LanguagePreference;
 import com.spark.chat.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query; 
@@ -14,6 +14,7 @@ public interface SignupRepository extends JpaRepository<User, Long> {
     Optional<User> findByMobileEndingWith(@Param("mobile") String mobile);
     
 }
+
 
 
 
