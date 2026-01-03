@@ -9,20 +9,38 @@ import lombok.Data;
 public class User {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long id;
-    public String name;
-    public Integer age;
-    public String gender;
+    private Long id;
+    
+    private String name;
+    private Integer age;
+    private String gender;
     
     @Column(unique = true) 
-    public String mobile;
-    public String password;
-    public String token;
+    private String mobile;
+    
+    private String password;
+    private String token;
 
+    // --- MANUALLY ADDED GETTERS & SETTERS FOR COMPILER SAFETY ---
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+
+    public Integer getAge() { return age; }
+    public void setAge(Integer age) { this.age = age; }
+
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getMobile() { return mobile; }
+    public void setMobile(String mobile) { this.mobile = mobile; }
+
+    public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-    public String getPassword() { return this.password; }
+
+    public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
-    public String getName() { return this.name; }
 }
-
-
