@@ -100,4 +100,26 @@ public class SignupController {
 
         return new SignupResponse(true, null, "Language saved successfully");
     }
+
+    // Real-world example: Submitting the login form to the Java Backend
+    async function submitLogin() {
+        const userData = {
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        };
+
+        const response = await fetch('http://localhost:8080/api/signup', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        const result = await response.json();
+        if(result.message === "Success") {
+            window.location.href = "chooseyourlanguage.html";
+        }
+    }
 }
+
