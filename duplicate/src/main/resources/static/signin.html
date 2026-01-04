@@ -56,6 +56,36 @@
 
 <script>
 const API_BASE = "http://13.233.141.130:8080";
+    
+    async function submitLogin() {
+        const userData = {
+                // Note: Your Java DTO uses mobile/password usually, 
+                // but if your form uses email, ensure they match!
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
+        };
+
+        try {
+            const response = await fetch('http://localhost:8080/api/signin', { // Use /api/signin for login
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            });
+
+            const result = await response.json();
+                
+                // Real-world check: In your Java code, SignupResponse has a 'success' boolean
+            if(result.success === true) { 
+                window.location.href = "chooseyourlanguage.html";
+            } else {
+                alert("Login Failed: " + result.message);
+            }
+        } catch (error) {
+            console.error("Error connecting to server:", error);
+        }
+    }
 
 // 1. AUTO-LOGIN: Check for token when the page opens
 window.onload = function() {
