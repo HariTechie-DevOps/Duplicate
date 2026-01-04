@@ -13,7 +13,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@CrossOrigin(origins = "*", allowedHeaders = "*")
+@CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "*")
+@RequestMapping("/api")
 public class SignupController {
 
     private final SignupService service;
@@ -27,8 +28,7 @@ public class SignupController {
 
     /**
      * SPA ROUTING FIX
-     * If a user refreshes the page on /signin or /signup, Spring Boot 
-     * usually throws a 404. This forwards those requests to React's index.html.
+     * Since this handles the browser's URL navigation, we use the full path.
      */
     @GetMapping(value = {"/signin", "/signup", "/send-otp", "/reset-password", "/choose-language"})
     public ModelAndView redirectToIndex() {
@@ -37,12 +37,12 @@ public class SignupController {
 
     /**
      * 1. GET ALL LANGUAGES
+     * Access: GET http://localhost:8080/api/languages
      */
-    @GetMapping("/api/languages")
+    @GetMapping("/languages")
     public List<String> getSupportedLanguages() {
         List<LanguagePreference> allPrefs = langRepo.findAll();
         if (allPrefs.isEmpty()) {
-            // Default fallbacks for the Cinematic Landing bubbles
             return Arrays.asList("English", "Japanese", "Spanish", "French", "German", "Hindi", "Tamil");
         }
         return allPrefs.stream()
@@ -54,13 +54,14 @@ public class SignupController {
 
     /**
      * 2. SIGNUP & SIGNIN
+     * Access: POST http://localhost:8080/api/signup
      */
-    @PostMapping("/api/signup")
+    @PostMapping("/signup")
     public SignupResponse signup(@RequestBody SignupRequest request) {
         return service.handlesignup(request);
     }
 
-    @PostMapping("/api/signin")
+    @PostMapping("/signin")
     public SignupResponse signin(@RequestBody SignupRequest request) {
         return service.handleSignin(request); 
     }
@@ -68,17 +69,17 @@ public class SignupController {
     /**
      * 3. OTP & PASSWORD MANAGEMENT
      */
-    @PostMapping("/api/password/send-otp")
+    @PostMapping("/password/send-otp")
     public SignupResponse sendOtp(@RequestBody Map<String, String> payload) {
         return service.sendOtp(payload.get("mobile"));
     }
 
-    @PostMapping("/api/password/verify-otp")
+    @PostMapping("/password/verify-otp")
     public SignupResponse verifyOtp(@RequestBody Map<String, String> payload) {
         return service.verifyOtp(payload.get("mobile"), payload.get("otp"));
     }
 
-    @PostMapping("/api/password/reset")
+    @PostMapping("/password/reset")
     public SignupResponse resetPassword(@RequestBody Map<String, String> payload) {
         return service.updatePassword(payload.get("mobile"), payload.get("password"));
     }
@@ -86,7 +87,7 @@ public class SignupController {
     /**
      * 4. USER PREFERENCES
      */
-    @PostMapping("/api/save-language")
+    @PostMapping("/save-language")
     public SignupResponse saveLanguage(@RequestBody Map<String, String> request) {
         String mobile = request.get("mobile");
         String language = request.get("language");
@@ -101,5 +102,3 @@ public class SignupController {
         return new SignupResponse(true, null, "Language saved successfully");
     }
 }
-
-
